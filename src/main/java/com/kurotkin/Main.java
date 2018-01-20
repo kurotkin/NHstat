@@ -24,6 +24,8 @@ public class Main {
                 System.out.print(i + ": " + result.result.current.get(i).name + " ");
                 System.out.print(result.result.current.get(i).profitability + " ");
                 System.out.println(result.result.current.get(i).data.toString());
+
+
             }
         } catch (Exception E){
             System.out.println("Error ");
