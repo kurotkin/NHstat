@@ -4,26 +4,19 @@ import com.google.gson.Gson;
 import com.kurotkin.api.com.coinmarketcap.api.ResponseBitcoinRub;
 import com.kurotkin.api.entities.ResponseProvider;
 import com.kurotkin.api.entities.ResponseProviderWithError;
-import com.kurotkin.hardware.arduino.Arduino;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import jssc.SerialPort;
+import jssc.SerialPortException;
 
 import java.util.Locale;
 
 
 public class Main {
     public static void main(String[] args) throws UnirestException, InterruptedException {
-
-        Arduino arduino = new Arduino("/dev/cu.usbmodem1421", 9600);
-
         while (true){
-            boolean connected = arduino.openConnection();
-            if(connected) System.out.print("connected: ");
-            Thread.sleep(1000);
-            arduino.serialWrite("0.0 0.0 0.0 0\n");
-
             double profitability = 0.0;
             double balance = 0.0;
             double speed = 0.0;
@@ -102,14 +95,33 @@ public class Main {
             toArduino += String.format(Locale.US, "%.2f", profitability) + " ";
             toArduino += String.format(Locale.US, "%.2f", balance) + " ";
             toArduino += String.format(Locale.US, "%.2f", speed) + " ";
-            toArduino += algo + "\n";
-            arduino.serialWrite(toArduino);
+            toArduino += algo;
+            writeBytes(toArduino);
             System.out.println(toArduino);
-            arduino.closeConnection();
             Thread.sleep(60000);
         }
 
     }
 
-
+    public static void writeBytes(String s) {
+        SerialPort serialPort = new SerialPort("/dev/cu.usbmodem1411");
+        try {
+            serialPort.openPort();
+            serialPort.setParams(SerialPort.BAUDRATE_9600,
+                                 SerialPort.DATABITS_8,
+                                 SerialPort.STOPBITS_1,
+                                 SerialPort.PARITY_NONE);
+            System.out.println("Open port " + serialPort.getPortName());
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            byte[] bytes = s.getBytes();
+            serialPort.writeBytes(bytes);
+            serialPort.closePort();
+        } catch (SerialPortException ex) {
+            System.out.println(ex);
+        }
+    }
 }
