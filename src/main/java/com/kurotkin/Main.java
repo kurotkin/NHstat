@@ -95,7 +95,7 @@ public class Main {
             toArduino += String.format(Locale.US, "%.2f", profitability) + " ";
             toArduino += String.format(Locale.US, "%.2f", balance) + " ";
             toArduino += String.format(Locale.US, "%.2f", speed) + " ";
-            toArduino += algo;
+            toArduino += algo + "\n";
             writeBytes(toArduino);
             System.out.println(toArduino);
             Thread.sleep(60000);
