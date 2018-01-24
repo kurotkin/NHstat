@@ -70,23 +70,6 @@ public class Main {
 
             }
 
-            double rb = 0.0;
-            HttpResponse<JsonNode> coinHttpResponse = Unirest.get("https://api.coinmarketcap.com/v1/ticker/bitcoin/")
-                        .queryString("convert", "RUB")
-                        .asJson();
-            try {
-                String coinResultString = "{result:" + coinHttpResponse.getBody().toString() + "}";
-                ResponseBitcoinRub coinResult = new Gson().fromJson(coinResultString, ResponseBitcoinRub.class);
-                String price_rub = coinResult.result.get(0).price_rub;
-                try {
-                    rb = Double.parseDouble(price_rub);
-                } catch (Exception E) {
-                    System.err.println("Error parsing rb");
-                }
-
-            } catch (Exception E) {
-                E.printStackTrace();
-            }
 
             profitability *= rb;
             balance *= rb;

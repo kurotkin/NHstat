@@ -44,6 +44,37 @@ public class Rate {
         } catch (Exception E) {
             E.printStackTrace();
         }
+    }
 
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getPrice_usd() {
+        return price_usd;
+    }
+
+    public BigDecimal getPercent_change_1h() {
+        return percent_change_1h;
+    }
+
+    public BigDecimal getPercent_change_24h() {
+        return percent_change_24h;
+    }
+
+    public BigDecimal getPercent_change_7d() {
+        return percent_change_7d;
+    }
+
+    public Date getLast_updated() {
+        return last_updated;
+    }
+
+    public BigDecimal getPrice_rub() {
+        return price_rub;
     }
 }
