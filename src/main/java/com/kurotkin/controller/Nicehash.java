@@ -41,9 +41,9 @@ public class Nicehash {
                 Thread.sleep(timeDelay * 1000);
                 query();
             } catch (Exception Er) {
-                    System.err.println(responseStr);
-                    E.printStackTrace();
-                    Er.printStackTrace();
+                System.err.println(responseStr);
+                E.printStackTrace();
+                Er.printStackTrace();
             }
         }
     }
@@ -56,7 +56,6 @@ public class Nicehash {
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
         List<Current> currents = rp.result.current;
 
-
         for (int i = 0; i < currents.size(); i++) {
             Current c = currents.get(i);
             //Parsing ex.: {"profitability":"0.0004099","data":[{"a":"1.55"},"0.00056466"],"name":"NeoScrypt","suffix":"MH","algo":8}
@@ -66,8 +65,11 @@ public class Nicehash {
             profitability = profitability.add(currentProfitability);
 
             String dataString = c.data.toString();                          // -> [{"a":"1.55"},"0.00056466"]
+            System.out.println(dataString);
             dataString = trimAny(dataString);                               // -> {"a":"1.55"},"0.00056466"
             String aS[] = dataString.split(", ");
+            // Calc balance
+            balance = balance.add(new BigDecimal(aS[1]));
 
             if (aS[0].length() > 2) {                                       // if worker is in work, NOT {}
                 String speedString = trimAny(aS[0]);
@@ -76,12 +78,13 @@ public class Nicehash {
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
             }
-            balance = balance.add(new BigDecimal(aS[1]));
+
         }
 
         profitability = profitability.multiply(rate.getPrice_rub());
         balance = balance.multiply(rate.getPrice_rub());
-
+        balance.setScale(2, BigDecimal.ROUND_DOWN);
+        speed.setScale(2, BigDecimal.ROUND_DOWN);
     }
 
     private String trimAny(String s) {

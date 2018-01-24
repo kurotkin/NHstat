@@ -28,10 +28,8 @@ public class Main {
             BigDecimal speed = nicehash.getSpeed();
             int algo = nicehash.getAlgo();
 
-
             String toArduino = createStringToSerial(profitability, balance, speed, algo);
-            //writeBytes(toArduino);
-            System.out.println(rate.getPrice_rub());
+            writeBytes(toArduino);
             System.out.println(toArduino);
             Thread.sleep(60000);
         }
