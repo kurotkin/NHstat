@@ -11,6 +11,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 
 public class Nicehash {
     private String apiUrl = "https://api.nicehash.com/api";
@@ -20,9 +21,15 @@ public class Nicehash {
     private BigDecimal speed;
     private int algo;
     private String responseStr;
+    private Rate rate;
 
-    public Nicehash(String addr) {
+    public Nicehash(String addr, Rate rate) {
         this.addr = addr;
+        this.rate = rate;
+        profitability = new BigDecimal("0.00000000");
+        balance  = new BigDecimal("0.00000000");
+        speed  = new BigDecimal("0.00");
+
         try {
            query();
         } catch (Exception E) {
@@ -49,27 +56,36 @@ public class Nicehash {
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
         List<Current> currents = rp.result.current;
 
-        profitability = new BigDecimal("0.0");
-        balance = new BigDecimal("0.0");
-        speed = new BigDecimal("0.0");
+
         for (int i = 0; i < currents.size(); i++) {
             Current c = currents.get(i);
             //Parsing ex.: {"profitability":"0.0004099","data":[{"a":"1.55"},"0.00056466"],"name":"NeoScrypt","suffix":"MH","algo":8}
             // or:         {"profitability":"0.00000787","data":[{},"0.00000364"],"name":"Lyra2REv2","suffix":"MH","algo":14}
 
-            profitability.add(new BigDecimal(c.profitability));
+            BigDecimal currentProfitability = new BigDecimal(String.format("%.8f", c.profitability));
+            profitability = profitability.add(currentProfitability);
 
             String dataString = c.data.toString();                          // -> [{"a":"1.55"},"0.00056466"]
-            dataString = dataString.substring(1, dataString.length() - 1);  // -> {"a":"1.55"},"0.00056466"
-            String aS[] = dataString.split(",");
+            dataString = trimAny(dataString);                               // -> {"a":"1.55"},"0.00056466"
+            String aS[] = dataString.split(", ");
 
-            if (aS[0].length() > 2) {                                       //if worker is in work, NOT {}
-                String speedString = aS[0].substring(4, aS[0].length() - 1);
-                speed.add(new BigDecimal(speedString));
+            if (aS[0].length() > 2) {                                       // if worker is in work, NOT {}
+                String speedString = trimAny(aS[0]);
+                speedString = speedString.substring(2, speedString.length());
+                BigDecimal currentSpeed = new BigDecimal(speedString);
+                speed = speed.add(currentSpeed);
                 algo = c.algo;
             }
-            balance.add(new BigDecimal(aS[1]));
+            balance = balance.add(new BigDecimal(aS[1]));
         }
+
+        profitability = profitability.multiply(rate.getPrice_rub());
+        balance = balance.multiply(rate.getPrice_rub());
+
+    }
+
+    private String trimAny(String s) {
+        return s.substring(1, s.length() - 1);
     }
 
     public BigDecimal getProfitability() {

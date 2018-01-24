@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) throws UnirestException, InterruptedException {
         while (true){
             Rate rate = new Rate();
-            Nicehash nicehash = new Nicehash("3MocyP1djGcdvyg693nMhsQtNo3AL7Uve1");
+            Nicehash nicehash = new Nicehash("3MocyP1djGcdvyg693nMhsQtNo3AL7Uve1", rate);
 
             BigDecimal profitability = nicehash.getProfitability();
             BigDecimal balance = nicehash.getBalance();
