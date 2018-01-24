@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.kurotkin.api.com.coinmarketcap.api.ResponseBitcoinRub;
 import com.kurotkin.api.entities.ResponseProvider;
 import com.kurotkin.api.entities.ResponseProviderWithError;
+import com.kurotkin.controller.Nicehash;
+import com.kurotkin.controller.Rate;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -11,79 +13,41 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 
 public class Main {
     public static void main(String[] args) throws UnirestException, InterruptedException {
         while (true){
-            double profitability = 0.0;
-            double balance = 0.0;
-            double speed = 0.0;
-            int algo = 0;
+            Rate rate = new Rate();
+            Nicehash nicehash = new Nicehash("3MocyP1djGcdvyg693nMhsQtNo3AL7Uve1");
 
-            goBack: {
-                HttpResponse<JsonNode> f = Unirest.get("https://api.nicehash.com/api")
-                        .queryString("method", "stats.provider.ex")
-                        .queryString("addr", "3MocyP1djGcdvyg693nMhsQtNo3AL7Uve1")
-                        .asJson();
-
-                try {
-                    ResponseProvider result = new Gson().fromJson(f.getBody().toString(), ResponseProvider.class);
-                    for (int i = 0; i < result.result.current.size(); i++) {
-                        profitability += result.result.current.get(i).profitability;
-
-                        String s = result.result.current.get(i).data.toString();
-                        s = s.substring(1, s.length() - 1);
-                        String aS[] = s.split(", ");
-
-                        if (aS[0].length() > 2) {
-                            try {
-                                speed += Double.parseDouble(aS[0].substring(4, aS[0].length() - 1));
-                            } catch (Exception E) {
-                                System.err.println("Error parsing speed");
-                            }
-
-                            algo = result.result.current.get(i).algo;
-                        }
-
-                        try {
-                            balance += Double.parseDouble(aS[1]);
-                        } catch (Exception E) {
-                            System.err.println("Error parsing balance");
-                        }
-                    }
-                } catch (Exception E) {
-                    try {
-                        ResponseProviderWithError result = new Gson().fromJson(f.getBody().toString(), ResponseProviderWithError.class);
-                        String aS[] = result.result.error.split(" ");
-                        int timeDelay = Integer.parseInt(aS[13]);
-                        System.out.println("Delay " + timeDelay + " sec");
-                        Thread.sleep(timeDelay * 1000);
-                        break goBack;
-                    } catch (Exception Er) {
-                        System.err.println(f.getBody().toString());
-                        E.printStackTrace();
-                        Er.printStackTrace();
-                    }
-                }
-
-            }
+            BigDecimal profitability = nicehash.getProfitability();
+            BigDecimal balance = nicehash.getBalance();
+            BigDecimal speed = nicehash.getSpeed();
+            int algo = nicehash.getAlgo();
 
 
-            profitability *= rb;
-            balance *= rb;
-
-            String toArduino = "";
-            toArduino += String.format(Locale.US, "%.2f", profitability) + " ";
-            toArduino += String.format(Locale.US, "%.2f", balance) + " ";
-            toArduino += String.format(Locale.US, "%.2f", speed) + " ";
-            toArduino += algo + "\n";
-            writeBytes(toArduino);
+            String toArduino = createStringToSerial(profitability, balance, speed, algo);
+            //writeBytes(toArduino);
+            System.out.println(rate.getPrice_rub());
             System.out.println(toArduino);
             Thread.sleep(60000);
         }
 
+    }
+    public static String createStringToSerial(BigDecimal profitability, BigDecimal balance, BigDecimal speed, int algo) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(String.format(Locale.US, "%.2f", profitability));
+        builder.append(" ");
+        builder.append(String.format(Locale.US, "%.2f", balance));
+        builder.append(" ");
+        builder.append(String.format(Locale.US, "%.2f", speed));
+        builder.append(" ");
+        builder.append(algo);
+        builder.append("\n");
+        return builder.toString();
     }
 
     public static void writeBytes(String s) {

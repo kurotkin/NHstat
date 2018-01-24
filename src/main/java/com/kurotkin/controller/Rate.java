@@ -46,10 +46,6 @@ public class Rate {
         }
     }
 
-    public String getApiUrl() {
-        return apiUrl;
-    }
-
     public String getName() {
         return name;
     }
