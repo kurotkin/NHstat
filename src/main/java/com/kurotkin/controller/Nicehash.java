@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.kurotkin.api.entities.Current;
 import com.kurotkin.api.entities.ResponseProvider;
 import com.kurotkin.api.entities.ResponseProviderWithError;
+import com.kurotkin.model.Worker;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,6 +24,7 @@ public class Nicehash {
     private int algo;
     private String responseStr;
     private Rate rate;
+    private List<Worker> workerList;
 
     public Nicehash(String addr, Rate rate) {
         this.addr = addr;
@@ -29,6 +32,7 @@ public class Nicehash {
         profitability = new BigDecimal("0.00000000");
         balance  = new BigDecimal("0.00000000");
         speed  = new BigDecimal("0.00");
+        workerList = new ArrayList<>();
 
         try {
            query();
@@ -56,33 +60,45 @@ public class Nicehash {
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
         List<Current> currents = rp.result.current;
 
+        BigDecimal price_rub = rate.getPrice_rub();
         for (int i = 0; i < currents.size(); i++) {
             Current c = currents.get(i);
             //Parsing ex.: {"profitability":"0.0004099","data":[{"a":"1.55"},"0.00056466"],"name":"NeoScrypt","suffix":"MH","algo":8}
             // or:         {"profitability":"0.00000787","data":[{},"0.00000364"],"name":"Lyra2REv2","suffix":"MH","algo":14}
 
             BigDecimal currentProfitability = new BigDecimal(String.format("%.8f", c.profitability));
-            profitability = profitability.add(currentProfitability);
 
+            // Parse data
             String dataString = c.data.toString();                          // -> [{"a":"1.55"},"0.00056466"]
             System.out.println(dataString);
             dataString = trimAny(dataString);                               // -> {"a":"1.55"},"0.00056466"
             String aS[] = dataString.split(", ");
-            // Calc balance
-            balance = balance.add(new BigDecimal(aS[1]));
+            BigDecimal currentBalance = new BigDecimal(aS[1]);
 
-            if (aS[0].length() > 2) {                                       // if worker is in work, NOT {}
+            BigDecimal currentSpeed = new BigDecimal("0.00");
+            if (aS[0].length() > 2) {                                       // if worker is in work, NOT "{}"
                 String speedString = trimAny(aS[0]);
                 speedString = speedString.substring(2, speedString.length());
-                BigDecimal currentSpeed = new BigDecimal(speedString);
+                currentSpeed = new BigDecimal(speedString);
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
             }
 
+            // Summation
+            profitability = profitability.add(currentProfitability);
+            balance = balance.add(currentBalance);
+
+            // Current worker
+            Worker worker = new Worker().withAlgo(algo)
+                    .withBalance(currentBalance.multiply(price_rub))
+                    .withName(c.name)
+                    .withProfitability(currentProfitability.multiply(price_rub))
+                    .withSpeed(currentSpeed)
+                    .withSuffix(c.suffix);
         }
 
-        profitability = profitability.multiply(rate.getPrice_rub());
-        balance = balance.multiply(rate.getPrice_rub());
+        profitability = profitability.multiply(price_rub);
+        balance = balance.multiply(price_rub);
         balance.setScale(2, BigDecimal.ROUND_DOWN);
         speed.setScale(2, BigDecimal.ROUND_DOWN);
     }
@@ -105,5 +121,9 @@ public class Nicehash {
 
     public int getAlgo() {
         return algo;
+    }
+
+    public List<Worker> getWorkerList() {
+        return workerList;
     }
 }
