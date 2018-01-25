@@ -3,11 +3,13 @@ package com.kurotkin.model;
 import java.math.BigDecimal;
 
 public class Worker {
+    private String name;
+    private int algo;
     private BigDecimal profitability;
     private BigDecimal balance;
     private BigDecimal speed;
-    private int algo;
-    private String name;
+
+
     private String suffix;
 
     public Worker(BigDecimal profitability, BigDecimal balance, BigDecimal speed, int algo, String name, String suffix) {
@@ -74,5 +76,17 @@ public class Worker {
 
     public String getSuffix() {
         return suffix;
+    }
+
+    @Override
+    public String toString() {
+        return "Worker{" +
+                "name='" + name + '\'' +
+                ", algo=" + algo +
+                ", profitability=" + profitability +
+                ", balance=" + balance +
+                ", speed=" + speed +
+                ", suffix='" + suffix + '\'' +
+                '}';
     }
 }

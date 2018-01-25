@@ -126,4 +126,14 @@ public class Nicehash {
     public List<Worker> getWorkerList() {
         return workerList;
     }
+
+    @Override
+    public String toString() {
+        return "Nicehash{" +
+                "profitability=" + profitability +
+                ", balance=" + balance +
+                ", speed=" + speed +
+                ", algo=" + algo +
+                '}';
+    }
 }

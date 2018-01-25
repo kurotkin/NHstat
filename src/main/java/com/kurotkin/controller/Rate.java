@@ -73,4 +73,16 @@ public class Rate {
     public BigDecimal getPrice_rub() {
         return price_rub;
     }
+
+    @Override
+    public String toString() {
+        return "Rate{" + "name='" + name + '\'' +
+                ", price_usd=" + price_usd +
+                ", percent_change_1h=" + percent_change_1h +
+                ", percent_change_24h=" + percent_change_24h +
+                ", percent_change_7d=" + percent_change_7d +
+                ", last_updated=" + last_updated +
+                ", price_rub=" + price_rub +
+                '}';
+    }
 }
