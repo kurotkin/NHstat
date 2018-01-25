@@ -28,18 +28,8 @@ public class Network {
 
         while (true){
             Long t1 = System.currentTimeMillis();
-
             Rate rate = new Rate();
             Nicehash nicehash = new Nicehash(Nicehash, rate);
-
-            BigDecimal speed = nicehash.getSpeed();
-            BigDecimal price_usd;
-            BigDecimal percent_change_1h;
-            BigDecimal percent_change_24h;
-            BigDecimal percent_change_7d;
-            BigDecimal price_rub;
-
-            int algo = nicehash.getAlgo();
             try {
                 InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
                 influxDB.createDatabase(InfluxDBdbName);
@@ -54,8 +44,14 @@ public class Network {
                 builder.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
                 builder.addField("profitability", nicehash.getProfitability().doubleValue());
                 builder.addField("balance", nicehash.getBalance().doubleValue());
-                builder.addField("profitability", nicehash.getProfitability().doubleValue());
-                builder.addField("profitability", nicehash.getProfitability().doubleValue());
+                builder.addField("speed", nicehash.getSpeed().doubleValue());
+                builder.addField("algo", nicehash.getAlgo());
+
+                builder.addField("price_usd", rate.getPrice_usd().doubleValue());
+                builder.addField("price_rub", rate.getPrice_rub().doubleValue());
+                builder.addField("percent_change_1h", rate.getPercent_change_1h().doubleValue());
+                builder.addField("percent_change_24h", rate.getPercent_change_24h().doubleValue());
+                builder.addField("percent_change_7d", rate.getPercent_change_7d().doubleValue());
 
                 batchPoints.point(builder.build());
                 influxDB.write(batchPoints);
