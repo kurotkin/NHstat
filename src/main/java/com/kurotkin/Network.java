@@ -12,7 +12,6 @@ import org.influxdb.dto.Point;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -31,9 +30,9 @@ public class Network {
         while (true){
             Long t1 = System.currentTimeMillis();
             Rate rate = new Rate();
-            System.out.println(rate.toString());
+            //System.out.println(rate.toString());
             Nicehash nicehash = new Nicehash(Nicehash, rate);
-            System.out.println(nicehash.toString());
+            //System.out.println(nicehash.toString());
             try {
                 InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
                 influxDB.createDatabase(InfluxDBdbName);
@@ -60,7 +59,6 @@ public class Network {
                 List<Worker> workerList = nicehash.getWorkerList();
                 for (int i = 0; i < workerList.size(); i++){
                     Worker worker = workerList.get(i);
-                    System.out.println(worker.toString());
                     builder.addField("algo_" + worker.getName() + "profitability", worker.getProfitability().doubleValue());
                     builder.addField("algo_" + worker.getName() + "balance", worker.getBalance().doubleValue());
                     builder.addField("algo_" + worker.getName() + "speed", worker.getSpeed().doubleValue());
@@ -85,9 +83,8 @@ public class Network {
     }
 
     private static void loadSetting(){
-        YamlReader reader = null;
         try {
-            reader = new YamlReader(new FileReader("settings.yml"));
+            YamlReader reader = new YamlReader(new FileReader("settings.yml"));
             Object object = reader.read();
             Map map = (Map)object;
             Nicehash = map.get("Nicehash").toString();

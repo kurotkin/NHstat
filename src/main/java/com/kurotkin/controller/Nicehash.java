@@ -22,6 +22,7 @@ public class Nicehash {
     private BigDecimal balance;
     private BigDecimal speed;
     private int algo;
+    private String algoName;
     private String responseStr;
     private Rate rate;
     private List<Worker> workerList;
@@ -82,6 +83,7 @@ public class Nicehash {
                 currentSpeed = new BigDecimal(speedString);
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
+                algoName = c.name;
             }
 
             // Summation
@@ -126,6 +128,10 @@ public class Nicehash {
 
     public List<Worker> getWorkerList() {
         return workerList;
+    }
+
+    public String getAlgoName() {
+        return algoName;
     }
 
     @Override
