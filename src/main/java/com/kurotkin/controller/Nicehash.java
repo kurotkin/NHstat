@@ -67,7 +67,6 @@ public class Nicehash {
             // or:         {"profitability":"0.00000787","data":[{},"0.00000364"],"name":"Lyra2REv2","suffix":"MH","algo":14}
 
             String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
-            String currentProfitabilityString2 = currentProfitabilityString;
             BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
 
             // Parse data
@@ -90,7 +89,7 @@ public class Nicehash {
             balance = balance.add(currentBalance);
 
             // Current worker
-            Worker worker = new Worker().withAlgo(algo)
+            Worker worker = new Worker().withAlgo(c.algo)
                     .withBalance(currentBalance.multiply(price_rub))
                     .withName(c.name)
                     .withProfitability(currentProfitability.multiply(price_rub))
