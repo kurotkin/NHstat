@@ -92,6 +92,9 @@ public class Network {
             InfluxDBUser = map.get("InfluxDBUser").toString();
             InfluxDBPass = map.get("InfluxDBPass").toString();
             InfluxDBdbName = map.get("InfluxDBdbName").toString();
+            System.out.println("Starting with param: " + Nicehash + " "
+                    + InfluxDBUser + ":" + InfluxDBPass + "@" + InfluxDBUrl + "/"
+                    + InfluxDBdbName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (YamlException e) {

@@ -111,7 +111,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.kurotkin.Main</mainClass>
+                            <mainClass>com.kurotkin.Network</mainClass>
                             <packageName>com.kurotkin</packageName>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
