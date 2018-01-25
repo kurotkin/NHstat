@@ -66,11 +66,12 @@ public class Nicehash {
             //Parsing ex.: {"profitability":"0.0004099","data":[{"a":"1.55"},"0.00056466"],"name":"NeoScrypt","suffix":"MH","algo":8}
             // or:         {"profitability":"0.00000787","data":[{},"0.00000364"],"name":"Lyra2REv2","suffix":"MH","algo":14}
 
-            BigDecimal currentProfitability = new BigDecimal(String.format("%.8f", c.profitability));
+            String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
+            String currentProfitabilityString2 = currentProfitabilityString;
+            BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
 
             // Parse data
             String dataString = c.data.toString();                          // -> [{"a":"1.55"},"0.00056466"]
-            System.out.println(dataString);
             dataString = trimAny(dataString);                               // -> {"a":"1.55"},"0.00056466"
             String aS[] = dataString.split(", ");
             BigDecimal currentBalance = new BigDecimal(aS[1]);
@@ -95,6 +96,7 @@ public class Nicehash {
                     .withProfitability(currentProfitability.multiply(price_rub))
                     .withSpeed(currentSpeed)
                     .withSuffix(c.suffix);
+            workerList.add(worker);
         }
 
         profitability = profitability.multiply(price_rub);
