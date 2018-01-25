@@ -32,7 +32,6 @@ public class Network {
             Rate rate = new Rate();
             Nicehash nicehash = new Nicehash(Nicehash, rate);
 
-
             BigDecimal speed = nicehash.getSpeed();
             BigDecimal price_usd;
             BigDecimal percent_change_1h;
