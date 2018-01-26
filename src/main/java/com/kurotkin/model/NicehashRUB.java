@@ -3,11 +3,11 @@ package com.kurotkin.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class NicehashBTC extends NicehashCurrency implements Nisehash {
+public class NicehashRUB  extends NicehashCurrency implements Nisehash  {
 
-    public NicehashBTC() {
-        this.profitability = new BigDecimal("0.00000000");
-        balance  = new BigDecimal("0.00000000");
+    public NicehashRUB() {
+        this.profitability = new BigDecimal("0.00");
+        balance  = new BigDecimal("0.00");
         speed  = new BigDecimal("0.00");
         workerList = new ArrayList<>();
     }
