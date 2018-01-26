@@ -2,8 +2,12 @@ package com.kurotkin.controller;
 
 import com.google.gson.Gson;
 import com.kurotkin.api.entities.Current;
+import com.kurotkin.api.entities.DataString;
 import com.kurotkin.api.entities.ResponseProvider;
 import com.kurotkin.api.entities.ResponseProviderWithError;
+import com.kurotkin.model.NicehashBTC;
+import com.kurotkin.model.NicehashRUB;
+import com.kurotkin.model.NicehashUSD;
 import com.kurotkin.model.Worker;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -18,23 +22,20 @@ import java.util.Locale;
 public class NicehashController {
     private String apiUrl = "https://api.nicehash.com/api";
     private String addr;
-    private BigDecimal profitability;
-    private BigDecimal balance;
-    private BigDecimal speed;
+    private String responseStr;
     private int algo;
     private String algoName;
-    private String responseStr;
-    private Rate rate;
-    private List<Worker> workerList;
+    private BigDecimal speed;
+    private NicehashBTC nicehashBTC;
+    private NicehashUSD nicehashUSD;
+    private NicehashRUB nicehashRUB;
 
     public NicehashController(String addr, Rate rate) {
         this.addr = addr;
-        this.rate = rate;
-        profitability = new BigDecimal("0.00000000");
-        balance  = new BigDecimal("0.00000000");
-        speed  = new BigDecimal("0.00");
-        workerList = new ArrayList<>();
-
+        nicehashBTC = new NicehashBTC();
+        nicehashUSD = new NicehashUSD(rate);
+        nicehashRUB = new NicehashRUB(rate);
+        speed = new BigDecimal("0.00");
         try {
            query();
         } catch (Exception E) {
@@ -61,86 +62,80 @@ public class NicehashController {
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
         List<Current> currents = rp.result.current;
 
-        BigDecimal price_rub = rate.getPrice_rub();
         for (int i = 0; i < currents.size(); i++) {
             Current c = currents.get(i);
-            //Parsing ex.: {"profitability":"0.0004099","data":[{"a":"1.55"},"0.00056466"],"name":"NeoScrypt","suffix":"MH","algo":8}
-            // or:         {"profitability":"0.00000787","data":[{},"0.00000364"],"name":"Lyra2REv2","suffix":"MH","algo":14}
 
+            // Parse profitability
             String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
             BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
+            nicehashBTC.addProfitability(currentProfitability);
+            nicehashUSD.addProfitability(currentProfitability);
+            nicehashRUB.addProfitability(currentProfitability);
 
             // Parse data
-            String dataString = c.data.toString();                          // -> [{"a":"1.55"},"0.00056466"]
-            dataString = trimAny(dataString);                               // -> {"a":"1.55"},"0.00056466"
+            String dataString = c.data.toString();
+            dataString = trimAny(dataString);
             String aS[] = dataString.split(", ");
-            BigDecimal currentBalance = new BigDecimal(aS[1]);
 
+            // Parse balance
+            BigDecimal currentBalance = new BigDecimal(aS[1]);
+            nicehashBTC.addBalance(currentBalance);
+            nicehashUSD.addBalance(currentBalance);
+            nicehashRUB.addBalance(currentBalance);
+
+            // Parse speed
             BigDecimal currentSpeed = new BigDecimal("0.00");
-            if (aS[0].length() > 2) {                                       // if worker is in work, NOT "{}"
-                String speedString = trimAny(aS[0]);
-                speedString = speedString.substring(2, speedString.length());
-                currentSpeed = new BigDecimal(speedString);
+            if (!aS[0].equals("{}")) {                                       // if worker is in work, NOT "{}"
+                double currentSpeedDouble = new Gson().fromJson(aS[0], DataString.class).a;
+                String currentSpeedString = String.format(Locale.US,"%.2f", currentSpeedDouble);
+                currentSpeed = new BigDecimal(currentSpeedString);
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
                 algoName = c.name;
             }
-
-            // Summation
-            profitability = profitability.add(currentProfitability);
-            balance = balance.add(currentBalance);
+            nicehashBTC.addSpeed(currentSpeed);
+            nicehashUSD.addSpeed(currentSpeed);
+            nicehashRUB.addSpeed(currentSpeed);
 
             // Current worker
-            Worker worker = new Worker().withAlgo(c.algo)
-                    .withBalance(currentBalance.multiply(price_rub))
-                    .withName(c.name)
-                    .withProfitability(currentProfitability.multiply(price_rub))
+            Worker worker = new Worker().withName(c.name)
+                    .withAlgo(c.algo)
+                    .withBalance(currentBalance)
+                    .withProfitability(currentProfitability)
                     .withSpeed(currentSpeed)
                     .withSuffix(c.suffix);
-            workerList.add(worker);
-        }
 
-        profitability = profitability.multiply(price_rub);
-        balance = balance.multiply(price_rub);
-        balance.setScale(2, BigDecimal.ROUND_DOWN);
-        speed.setScale(2, BigDecimal.ROUND_DOWN);
+            nicehashBTC.addWorkers(worker);
+            nicehashUSD.addWorkers(worker);
+            nicehashRUB.addWorkers(worker);
+        }
     }
 
     private String trimAny(String s) {
         return s.substring(1, s.length() - 1);
     }
 
-    public BigDecimal getProfitability() {
-        return profitability;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public BigDecimal getSpeed() {
-        return speed;
-    }
-
     public int getAlgo() {
         return algo;
-    }
-
-    public List<Worker> getWorkerList() {
-        return workerList;
     }
 
     public String getAlgoName() {
         return algoName;
     }
 
-    @Override
-    public String toString() {
-        return "NicehashController{" +
-                "profitability=" + profitability +
-                ", balance=" + balance +
-                ", speed=" + speed +
-                ", algo=" + algo +
-                '}';
+    public BigDecimal getSpeed() {
+        return speed;
+    }
+
+    public NicehashBTC getNicehashBTC() {
+        return nicehashBTC;
+    }
+
+    public NicehashUSD getNicehashUSD() {
+        return nicehashUSD;
+    }
+
+    public NicehashRUB getNicehashRUB() {
+        return nicehashRUB;
     }
 }

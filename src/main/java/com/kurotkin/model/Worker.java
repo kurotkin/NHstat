@@ -5,11 +5,9 @@ import java.math.BigDecimal;
 public class Worker {
     private String name;
     private int algo;
-    private BigDecimal profitability;
-    private BigDecimal balance;
+    public BigDecimal profitability;
+    public BigDecimal balance;
     private BigDecimal speed;
-
-
     private String suffix;
 
     public Worker(BigDecimal profitability, BigDecimal balance, BigDecimal speed, int algo, String name, String suffix) {
@@ -54,6 +52,7 @@ public class Worker {
         return this;
     }
 
+    // Getters
     public BigDecimal getProfitability() {
         return profitability;
     }

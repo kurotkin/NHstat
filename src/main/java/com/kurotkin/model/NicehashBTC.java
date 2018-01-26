@@ -2,6 +2,7 @@ package com.kurotkin.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NicehashBTC extends NicehashCurrency implements Nisehash {
 
@@ -26,4 +27,11 @@ public class NicehashBTC extends NicehashCurrency implements Nisehash {
     public void addSpeed(BigDecimal valBTC) {
         this.speed = this.speed.add(valBTC);
     }
+
+    @Override
+    public void addWorkers(Worker worker) {
+        workerList.add(worker);
+    }
+
+
 }
