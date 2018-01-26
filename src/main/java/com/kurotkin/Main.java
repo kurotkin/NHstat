@@ -1,14 +1,7 @@
 package com.kurotkin;
 
-import com.google.gson.Gson;
-import com.kurotkin.api.com.coinmarketcap.api.ResponseBitcoinRub;
-import com.kurotkin.api.entities.ResponseProvider;
-import com.kurotkin.api.entities.ResponseProviderWithError;
-import com.kurotkin.controller.Nicehash;
+import com.kurotkin.controller.NicehashController;
 import com.kurotkin.controller.Rate;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import jssc.SerialPort;
 import jssc.SerialPortException;
@@ -21,12 +14,12 @@ public class Main {
     public static void main(String[] args) throws UnirestException, InterruptedException {
         while (true){
             Rate rate = new Rate();
-            Nicehash nicehash = new Nicehash("3MocyP1djGcdvyg693nMhsQtNo3AL7Uve1", rate);
+            NicehashController nicehashController = new NicehashController("3MocyP1djGcdvyg693nMhsQtNo3AL7Uve1", rate);
 
-            BigDecimal profitability = nicehash.getProfitability();
-            BigDecimal balance = nicehash.getBalance();
-            BigDecimal speed = nicehash.getSpeed();
-            int algo = nicehash.getAlgo();
+            BigDecimal profitability = nicehashController.getProfitability();
+            BigDecimal balance = nicehashController.getBalance();
+            BigDecimal speed = nicehashController.getSpeed();
+            int algo = nicehashController.getAlgo();
 
             String toArduino = createStringToSerial(profitability, balance, speed, algo);
             writeBytes(toArduino);

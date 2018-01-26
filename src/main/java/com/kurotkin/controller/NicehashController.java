@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Nicehash {
+public class NicehashController {
     private String apiUrl = "https://api.nicehash.com/api";
     private String addr;
     private BigDecimal profitability;
@@ -27,7 +27,7 @@ public class Nicehash {
     private Rate rate;
     private List<Worker> workerList;
 
-    public Nicehash(String addr, Rate rate) {
+    public NicehashController(String addr, Rate rate) {
         this.addr = addr;
         this.rate = rate;
         profitability = new BigDecimal("0.00000000");
@@ -136,7 +136,7 @@ public class Nicehash {
 
     @Override
     public String toString() {
-        return "Nicehash{" +
+        return "NicehashController{" +
                 "profitability=" + profitability +
                 ", balance=" + balance +
                 ", speed=" + speed +

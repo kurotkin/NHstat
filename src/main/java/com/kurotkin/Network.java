@@ -2,7 +2,7 @@ package com.kurotkin;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
-import com.kurotkin.controller.Nicehash;
+import com.kurotkin.controller.NicehashController;
 import com.kurotkin.controller.Rate;
 import com.kurotkin.model.Worker;
 import org.influxdb.InfluxDB;
@@ -31,8 +31,8 @@ public class Network {
             Long t1 = System.currentTimeMillis();
             Rate rate = new Rate();
             //System.out.println(rate.toString());
-            Nicehash nicehash = new Nicehash(Nicehash, rate);
-            //System.out.println(nicehash.toString());
+            NicehashController nicehashController = new NicehashController(Nicehash, rate);
+            //System.out.println(nicehashController.toString());
             try {
                 InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
                 influxDB.createDatabase(InfluxDBdbName);
@@ -45,10 +45,10 @@ public class Network {
 
                 Point.Builder builder = Point.measurement("Bitcoin");
                 builder.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-                builder.addField("profitability", nicehash.getProfitability().doubleValue());
-                builder.addField("balance", nicehash.getBalance().doubleValue());
-                builder.addField("speed", nicehash.getSpeed().doubleValue());
-                builder.addField("algo", nicehash.getAlgo());
+                builder.addField("profitability", nicehashController.getProfitability().doubleValue());
+                builder.addField("balance", nicehashController.getBalance().doubleValue());
+                builder.addField("speed", nicehashController.getSpeed().doubleValue());
+                builder.addField("algo", nicehashController.getAlgo());
 
                 builder.addField("price_usd", rate.getPrice_usd().doubleValue());
                 builder.addField("price_rub", rate.getPrice_rub().doubleValue());
@@ -56,7 +56,7 @@ public class Network {
                 builder.addField("percent_change_24h", rate.getPercent_change_24h().doubleValue());
                 builder.addField("percent_change_7d", rate.getPercent_change_7d().doubleValue());
 
-                List<Worker> workerList = nicehash.getWorkerList();
+                List<Worker> workerList = nicehashController.getWorkerList();
                 for (int i = 0; i < workerList.size(); i++){
                     Worker worker = workerList.get(i);
                     builder.addField("algo_" + worker.getName() + "profitability", worker.getProfitability().doubleValue());
@@ -87,7 +87,7 @@ public class Network {
             YamlReader reader = new YamlReader(new FileReader("settings.yml"));
             Object object = reader.read();
             Map map = (Map)object;
-            Nicehash = map.get("Nicehash").toString();
+            Nicehash = map.get("NicehashController").toString();
             InfluxDBUrl = map.get("InfluxDBUrl").toString();
             InfluxDBUser = map.get("InfluxDBUser").toString();
             InfluxDBPass = map.get("InfluxDBPass").toString();
