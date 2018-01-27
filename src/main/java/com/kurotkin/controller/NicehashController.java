@@ -1,10 +1,10 @@
 package com.kurotkin.controller;
 
 import com.google.gson.Gson;
-import com.kurotkin.api.entities.Current;
-import com.kurotkin.api.entities.DataString;
-import com.kurotkin.api.entities.ResponseProvider;
-import com.kurotkin.api.entities.ResponseProviderWithError;
+import com.kurotkin.api.com.nicehash.api.Current;
+import com.kurotkin.api.com.nicehash.api.DataString;
+import com.kurotkin.api.com.nicehash.api.ResponseProvider;
+import com.kurotkin.api.com.nicehash.api.ResponseProviderWithError;
 import com.kurotkin.model.NicehashBTC;
 import com.kurotkin.model.NicehashRUB;
 import com.kurotkin.model.NicehashUSD;

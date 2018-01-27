@@ -25,7 +25,7 @@ public class NicehashUSD extends NicehashCurrency implements Nisehash {
     @Override
     public void addBalance(BigDecimal valBTC) {
         BigDecimal valUSD = valBTC.multiply(rate.getPrice_usd());
-        this.balance = this.balance.add(valBTC);
+        this.balance = this.balance.add(valUSD);
     }
 
     @Override

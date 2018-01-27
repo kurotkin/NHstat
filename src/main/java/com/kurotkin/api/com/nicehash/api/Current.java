@@ -1,4 +1,4 @@
-package com.kurotkin.api.entities;
+package com.kurotkin.api.com.nicehash.api;
 
 public class Current {
     public double profitability;

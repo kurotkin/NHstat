@@ -22,27 +22,21 @@ public class Rate {
     private BigDecimal price_rub;
 
     public Rate() {
-        HttpResponse<JsonNode> coinHttpResponse = null;
         try {
-            coinHttpResponse = Unirest.get(apiUrl).queryString("convert", "RUB").asJson();
-        } catch (UnirestException e) {
-            e.printStackTrace();
-        }
-        try {
+            HttpResponse<JsonNode> coinHttpResponse = Unirest.get(apiUrl).queryString("convert", "RUB").asJson();
             String coinResultString = "{result:" + coinHttpResponse.getBody().toString() + "}";
             ResponseBitcoinRub coinResult = new Gson().fromJson(coinResultString, ResponseBitcoinRub.class);
 
             BitcoinRub bitcoinRub = coinResult.result.get(0);
             name = bitcoinRub.name;
             price_usd = new BigDecimal(bitcoinRub.price_usd);
+            price_rub = new BigDecimal(bitcoinRub.price_rub);
             percent_change_1h = new BigDecimal(bitcoinRub.percent_change_1h);
             percent_change_24h = new BigDecimal(bitcoinRub.percent_change_24h);
             percent_change_7d = new BigDecimal(bitcoinRub.percent_change_7d);
-            price_rub = new BigDecimal(bitcoinRub.price_rub);
             last_updated = new Date(Long.parseLong(bitcoinRub.last_updated));
-
-        } catch (Exception E) {
-            E.printStackTrace();
+        } catch (UnirestException e) {
+            e.printStackTrace();
         }
     }
 
@@ -72,6 +66,10 @@ public class Rate {
 
     public BigDecimal getPrice_rub() {
         return price_rub;
+    }
+
+    public void print() {
+        System.out.println(this.toString());
     }
 
     @Override

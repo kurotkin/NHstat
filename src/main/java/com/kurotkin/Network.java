@@ -113,7 +113,7 @@ public class Network {
             YamlReader reader = new YamlReader(new FileReader("settings.yml"));
             Object object = reader.read();
             Map map = (Map)object;
-            Nicehash = map.get("NicehashController").toString();
+            Nicehash = map.get("Nicehash").toString();
             InfluxDBUrl = map.get("InfluxDBUrl").toString();
             InfluxDBUser = map.get("InfluxDBUser").toString();
             InfluxDBPass = map.get("InfluxDBPass").toString();
