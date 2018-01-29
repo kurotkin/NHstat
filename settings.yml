@@ -1,6 +1,8 @@
 # Settings #
 
 Nicehash: 3MocyP1djGcdvyg693nMhsQtNo3AL7Uve1
+NicehashId: 0
+NicehashKeyOnlyRead: 0
 #InfluxDBUrl: http://10.0.0.1:8086
 
 InfluxDBUser: root
