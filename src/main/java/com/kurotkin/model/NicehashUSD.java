@@ -12,6 +12,7 @@ public class NicehashUSD extends NicehashCurrency implements Nisehash {
         this.rate = rate;
         this.profitability = new BigDecimal("0.00");
         balance  = new BigDecimal("0.00");
+        balanceConfirmed = new BigDecimal("0.00");
         speed  = new BigDecimal("0.00");
         workerList = new ArrayList<>();
     }
@@ -38,5 +39,11 @@ public class NicehashUSD extends NicehashCurrency implements Nisehash {
         worker.profitability = worker.profitability.multiply(rate.getPrice_usd());
         worker.balance = worker.balance.multiply(rate.getPrice_usd());
         workerList.add(worker);
+    }
+
+    @Override
+    public void addBalanceConfirmed(BigDecimal valBTC) {
+        BigDecimal valUSD = valBTC.multiply(rate.getPrice_usd());
+        this.balanceConfirmed = this.balanceConfirmed.add(valUSD);
     }
 }

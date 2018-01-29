@@ -7,6 +7,7 @@ import java.util.List;
 abstract class NicehashCurrency {
     BigDecimal profitability = null;
     BigDecimal balance = null;
+    BigDecimal balanceConfirmed = null;
     BigDecimal speed = null;
     List<Worker> workerList = new ArrayList<>();
 
@@ -18,8 +19,16 @@ abstract class NicehashCurrency {
         return balance;
     }
 
+    public BigDecimal getBalanceConfirmed() {
+        return balanceConfirmed;
+    }
+
+    public BigDecimal getBalanceTotal() {
+        return balance;
+    }
+
     public BigDecimal getSpeed() {
-        return speed;
+        return speed.add(balanceConfirmed);
     }
 
     public List<Worker> getWorkerList() {

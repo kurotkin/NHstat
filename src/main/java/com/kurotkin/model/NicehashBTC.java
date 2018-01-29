@@ -9,6 +9,7 @@ public class NicehashBTC extends NicehashCurrency implements Nisehash {
     public NicehashBTC() {
         this.profitability = new BigDecimal("0.00000000");
         balance  = new BigDecimal("0.00000000");
+        balanceConfirmed = new BigDecimal("0.00000000");
         speed  = new BigDecimal("0.00");
         workerList = new ArrayList<>();
     }
@@ -31,6 +32,11 @@ public class NicehashBTC extends NicehashCurrency implements Nisehash {
     @Override
     public void addWorkers(Worker worker) {
         workerList.add(worker);
+    }
+
+    @Override
+    public void addBalanceConfirmed(BigDecimal valBTC) {
+        this.balanceConfirmed = valBTC;
     }
 
 
