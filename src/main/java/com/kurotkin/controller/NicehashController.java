@@ -21,6 +21,8 @@ import java.util.Locale;
 public class NicehashController {
     private String apiUrl = "https://api.nicehash.com/api";
     private String addr;
+    private String NicehashId;
+    private String NicehashKey;
     private String responseStr;
     private int algo;
     private String algoName;
@@ -29,8 +31,10 @@ public class NicehashController {
     private NicehashUSD nicehashUSD;
     private NicehashRUB nicehashRUB;
 
-    public NicehashController(String addr, Rate rate) {
+    public NicehashController(String addr, Rate rate, String NicehashId, String NicehashKey) {
         this.addr = addr;
+        this.NicehashId = NicehashId;
+        this.NicehashKey = NicehashKey;
         nicehashBTC = new NicehashBTC();
         nicehashUSD = new NicehashUSD(rate);
         nicehashRUB = new NicehashRUB(rate);
@@ -59,11 +63,10 @@ public class NicehashController {
                 .asJson();
         responseStr = f.getBody().toString();
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
+        BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
+
         List<Current> currents = rp.result.current;
-
-        for (int i = 0; i < currents.size(); i++) {
-            Current c = currents.get(i);
-
+        currents.stream().forEach(c -> {
             // Parse profitability
             String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
             BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
@@ -82,25 +85,30 @@ public class NicehashController {
             nicehashUSD.addBalance(currentBalance);
             nicehashRUB.addBalance(currentBalance);
 
+            //  Parse confirmed balance
+            nicehashBTC.addBalanceConfirmed(balanceController.getBalance());
+            nicehashUSD.addBalanceConfirmed(balanceController.getBalance());
+            nicehashRUB.addBalanceConfirmed(balanceController.getBalance());
+
             // Parse speed
             BigDecimal currentSpeed = new BigDecimal("0.00");
             if (!aS[0].equals("{}")) {                                       // if worker is in work, NOT "{}"
                 double currentSpeedDouble = new Gson().fromJson(aS[0], DataString.class).a;
                 String currentSpeedString = String.format(Locale.US,"%.2f", currentSpeedDouble);
                 if(c.suffix.equals("H")){
-                    currentSpeed = new BigDecimal(currentSpeedString);
+                    BigDecimal currentSpeedInH = new BigDecimal(currentSpeedString);
+                    currentSpeed = currentSpeedInH.multiply(new BigDecimal("0.000001"));
                 }
                 if(c.suffix.equals("kH")){
-                    BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
-                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000"));
+                    BigDecimal currentSpeedInkH = new BigDecimal(currentSpeedString);
+                    currentSpeed = currentSpeedInkH.multiply(new BigDecimal("0.001"));
                 }
                 if(c.suffix.equals("MH")){
-                    BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
-                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000000"));
+                    currentSpeed = new BigDecimal(currentSpeedString);
                 }
                 if(c.suffix.equals("GH")){
                     BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
-                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000000000"));
+                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000"));
                 }
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
@@ -121,7 +129,7 @@ public class NicehashController {
             nicehashBTC.addWorkers(worker);
             nicehashUSD.addWorkers(worker);
             nicehashRUB.addWorkers(worker);
-        }
+        });
     }
 
     private String trimAny(String s) {

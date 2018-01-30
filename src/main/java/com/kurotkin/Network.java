@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class Network {
 
     private static String Nicehash;
+    private static String NicehashId;
+    private static String NicehashKey;
     private static String InfluxDBUrl;
     private static String InfluxDBUser;
     private static String InfluxDBPass;
@@ -32,7 +34,7 @@ public class Network {
         while (true){
             Long t1 = System.currentTimeMillis();
             Rate rate = new Rate();
-            NicehashController nicehashController = new NicehashController(Nicehash, rate);
+            NicehashController nicehashController = new NicehashController(Nicehash, rate, NicehashId, NicehashKey);
             try {
                 InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
                 influxDB.createDatabase(InfluxDBdbName);
@@ -123,6 +125,8 @@ public class Network {
             Object object = reader.read();
             Map map = (Map)object;
             Nicehash = map.get("Nicehash").toString();
+            NicehashId = map.get("NicehashId").toString();
+            NicehashKey = map.get("NicehashKeyOnlyRead").toString();
             InfluxDBUrl = map.get("InfluxDBUrl").toString();
             InfluxDBUser = map.get("InfluxDBUser").toString();
             InfluxDBPass = map.get("InfluxDBPass").toString();
