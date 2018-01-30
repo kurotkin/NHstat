@@ -46,41 +46,50 @@ public class Network {
                 Point.Builder builder = Point.measurement("Bitcoin");
                 builder.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
+                // BTC
                 NicehashBTC nicehashBTC = nicehashController.getNicehashBTC();
                 builder.addField("profitability_BTC", nicehashBTC.getProfitability().doubleValue());
                 builder.addField("balance_BTC", nicehashBTC.getBalance().doubleValue());
+                builder.addField("balanceConfirmed_BTC", nicehashBTC.getBalanceConfirmed().doubleValue());
+                builder.addField("balanceTotal_BTC", nicehashBTC.getBalanceTotal().doubleValue());
                 builder.addField("speed", nicehashController.getSpeed().doubleValue());
                 builder.addField("algo", nicehashController.getAlgo());
 
+                // USD
                 NicehashUSD nicehashUSD = nicehashController.getNicehashUSD();
                 builder.addField("profitability_USD", nicehashUSD.getProfitability().doubleValue());
                 builder.addField("balance_USD", nicehashUSD.getBalance().doubleValue());
+                builder.addField("balanceConfirmed_USD", nicehashUSD.getBalanceConfirmed().doubleValue());
+                builder.addField("balanceTotal_USD", nicehashUSD.getBalanceTotal().doubleValue());
 
+                // RUB
                 NicehashRUB nicehashRUB = nicehashController.getNicehashRUB();
                 builder.addField("profitability_RUB", nicehashRUB.getProfitability().doubleValue());
                 builder.addField("balance_RUB", nicehashRUB.getBalance().doubleValue());
+                builder.addField("balanceConfirmed_RUB", nicehashRUB.getBalanceConfirmed().doubleValue());
+                builder.addField("balanceTotal_RUB", nicehashRUB.getBalanceTotal().doubleValue());
 
+                // Workers BTC
                 List<Worker> workerListBTC = nicehashController.getNicehashBTC().getWorkerList();
-                for (int i = 0; i < workerListBTC.size(); i++){
-                    Worker worker = workerListBTC.get(i);
+                workerListBTC.stream().forEach(worker -> {
                     builder.addField("algo_" + worker.getName() + "_profitability_BTC", worker.getProfitability().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_balance_BTC", worker.getBalance().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_speed", worker.getSpeed().doubleValue());
-                }
+                });
 
+                // Workers USD
                 List<Worker> workerListUSD = nicehashController.getNicehashUSD().getWorkerList();
-                for (int i = 0; i < workerListUSD.size(); i++){
-                    Worker worker = workerListUSD.get(i);
+                workerListUSD.stream().forEach(worker -> {
                     builder.addField("algo_" + worker.getName() + "_profitability_USD", worker.getProfitability().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_balance_USD", worker.getBalance().doubleValue());
-                }
+                });
 
+                // Workers RUB
                 List<Worker> workerListRUB = nicehashController.getNicehashRUB().getWorkerList();
-                for (int i = 0; i < workerListRUB.size(); i++){
-                    Worker worker = workerListRUB.get(i);
+                workerListRUB.stream().forEach(worker -> {
                     builder.addField("algo_" + worker.getName() + "_profitability_RUB", worker.getProfitability().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_balance_RUB", worker.getBalance().doubleValue());
-                }
+                });
 
                 // Price
                 builder.addField("price_usd", rate.getPrice_usd().doubleValue());

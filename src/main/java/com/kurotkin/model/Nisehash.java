@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface Nisehash {
-    public void addProfitability(BigDecimal valBTC);
-    public void addBalance(BigDecimal valBTC);
-    public void addSpeed(BigDecimal valBTC);
-    public void addWorkers(Worker worker);
-    public void addBalanceConfirmed(BigDecimal valBTC);
+    void addProfitability(BigDecimal valBTC);
+    void addBalance(BigDecimal valBTC);
+    void addSpeed(BigDecimal valBTC);
+    void addWorkers(Worker worker);
+    void addBalanceConfirmed(BigDecimal valBTC);
 }

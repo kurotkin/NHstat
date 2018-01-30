@@ -87,16 +87,20 @@ public class NicehashController {
             if (!aS[0].equals("{}")) {                                       // if worker is in work, NOT "{}"
                 double currentSpeedDouble = new Gson().fromJson(aS[0], DataString.class).a;
                 String currentSpeedString = String.format(Locale.US,"%.2f", currentSpeedDouble);
-                if(c.suffix.equals("kH")){
+                if(c.suffix.equals("H")){
                     currentSpeed = new BigDecimal(currentSpeedString);
                 }
-                if(c.suffix.equals("MH")){
+                if(c.suffix.equals("kH")){
                     BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
                     currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000"));
                 }
-                if(c.suffix.equals("GH")){
+                if(c.suffix.equals("MH")){
                     BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
                     currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000000"));
+                }
+                if(c.suffix.equals("GH")){
+                    BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
+                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000000000"));
                 }
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
