@@ -1,7 +1,7 @@
 package com.kurotkin.controller;
 
 import com.google.gson.Gson;
-import com.kurotkin.api.com.nicehash.api.Balance;
+import com.kurotkin.api.com.nicehash.api.balance.Balance;
 import com.mashape.unirest.http.Unirest;
 
 import java.math.BigDecimal;

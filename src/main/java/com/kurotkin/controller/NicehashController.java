@@ -1,10 +1,10 @@
 package com.kurotkin.controller;
 
 import com.google.gson.Gson;
-import com.kurotkin.api.com.nicehash.api.Current;
-import com.kurotkin.api.com.nicehash.api.DataString;
-import com.kurotkin.api.com.nicehash.api.ResponseProvider;
-import com.kurotkin.api.com.nicehash.api.ResponseProviderWithError;
+import com.kurotkin.api.com.nicehash.api.stats.provider.ex.Current;
+import com.kurotkin.api.com.nicehash.api.stats.provider.ex.DataString;
+import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProvider;
+import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProviderWithError;
 import com.kurotkin.model.NicehashBTC;
 import com.kurotkin.model.NicehashRUB;
 import com.kurotkin.model.NicehashUSD;
@@ -87,7 +87,17 @@ public class NicehashController {
             if (!aS[0].equals("{}")) {                                       // if worker is in work, NOT "{}"
                 double currentSpeedDouble = new Gson().fromJson(aS[0], DataString.class).a;
                 String currentSpeedString = String.format(Locale.US,"%.2f", currentSpeedDouble);
-                currentSpeed = new BigDecimal(currentSpeedString);
+                if(c.suffix.equals("kH")){
+                    currentSpeed = new BigDecimal(currentSpeedString);
+                }
+                if(c.suffix.equals("MH")){
+                    BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
+                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000"));
+                }
+                if(c.suffix.equals("GH")){
+                    BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
+                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000000"));
+                }
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
                 algoName = c.name;
