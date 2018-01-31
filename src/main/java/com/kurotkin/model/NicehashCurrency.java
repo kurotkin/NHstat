@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 abstract class NicehashCurrency {
-    BigDecimal profitability = null;
-    BigDecimal balance = null;
-    BigDecimal balanceConfirmed = null;
-    BigDecimal speed = null;
-    List<Worker> workerList = new ArrayList<>();
+    BigDecimal profitability;
+    BigDecimal balance;
+    BigDecimal balanceConfirmed;
+    BigDecimal speed;
+    List<Worker> workerList;
 
     public BigDecimal getProfitability() {
         return profitability;
@@ -24,11 +24,15 @@ abstract class NicehashCurrency {
     }
 
     public BigDecimal getBalanceTotal() {
-        return balance;
+        if(balanceConfirmed != null){
+            return balance.add(balanceConfirmed);
+        } else {
+            return balance;
+        }
     }
 
     public BigDecimal getSpeed() {
-        return speed.add(balanceConfirmed);
+        return speed;
     }
 
     public List<Worker> getWorkerList() {
