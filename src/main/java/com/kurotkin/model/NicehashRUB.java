@@ -30,6 +30,12 @@ public class NicehashRUB  extends NicehashCurrency implements Nisehash  {
     }
 
     @Override
+    public void addBalanceConfirmed(BigDecimal valBTC) {
+        BigDecimal valRUB = valBTC.multiply(rate.getPrice_rub());
+        this.balanceConfirmed = this.balanceConfirmed.add(valRUB);
+    }
+
+    @Override
     public void addSpeed(BigDecimal valBTC) {
         this.speed = this.speed.add(valBTC);
     }
@@ -39,11 +45,5 @@ public class NicehashRUB  extends NicehashCurrency implements Nisehash  {
         worker.profitability = worker.profitability.multiply(rate.getPrice_rub());
         worker.balance = worker.balance.multiply(rate.getPrice_rub());
         workerList.add(worker);
-    }
-
-    @Override
-    public void addBalanceConfirmed(BigDecimal valBTC) {
-        BigDecimal valRUB = valBTC.multiply(rate.getPrice_rub());
-        this.balanceConfirmed = this.balanceConfirmed.add(valRUB);
     }
 }
