@@ -19,13 +19,11 @@ import java.util.List;
 import java.util.Locale;
 
 public class NicehashController {
-    private String apiUrl = "https://api.nicehash.com/api";
     private String addr;
     private String NicehashId;
     private String NicehashKey;
     private String responseStr;
     private int algo;
-    private String algoName;
     private BigDecimal speed;
     private NicehashBTC nicehashBTC;
     private NicehashUSD nicehashUSD;
@@ -58,15 +56,17 @@ public class NicehashController {
     }
 
     private void query() throws UnirestException {
-        HttpResponse<JsonNode> f = Unirest.get(apiUrl).queryString("method", "stats.provider.ex")
+        responseStr = Unirest.get("https://api.nicehash.com/api")
+                .queryString("method", "stats.provider.ex")
                 .queryString("addr", addr)
-                .asJson();
-        responseStr = f.getBody().toString();
+                .asJson()
+                .getBody()
+                .toString();
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
         BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
 
         List<Current> currents = rp.result.current;
-        currents.stream().forEach(c -> {
+        currents.forEach(c -> {
             // Parse profitability
             String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
             BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
@@ -112,7 +112,6 @@ public class NicehashController {
                 }
                 speed = speed.add(currentSpeed);
                 algo = c.algo;
-                algoName = c.name;
             }
             nicehashBTC.addSpeed(currentSpeed);
             nicehashUSD.addSpeed(currentSpeed);
@@ -138,10 +137,6 @@ public class NicehashController {
 
     public int getAlgo() {
         return algo;
-    }
-
-    public String getAlgoName() {
-        return algoName;
     }
 
     public BigDecimal getSpeed() {

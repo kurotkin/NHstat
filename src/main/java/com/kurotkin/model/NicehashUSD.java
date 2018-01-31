@@ -30,6 +30,12 @@ public class NicehashUSD extends NicehashCurrency implements Nisehash {
     }
 
     @Override
+    public void addBalanceConfirmed(BigDecimal valBTC) {
+        BigDecimal valUSD = valBTC.multiply(rate.getPrice_usd());
+        this.balanceConfirmed = this.balanceConfirmed.add(valUSD);
+    }
+
+    @Override
     public void addSpeed(BigDecimal valBTC) {
         this.speed = this.speed.add(valBTC);
     }
@@ -39,11 +45,5 @@ public class NicehashUSD extends NicehashCurrency implements Nisehash {
         worker.profitability = worker.profitability.multiply(rate.getPrice_usd());
         worker.balance = worker.balance.multiply(rate.getPrice_usd());
         workerList.add(worker);
-    }
-
-    @Override
-    public void addBalanceConfirmed(BigDecimal valBTC) {
-        BigDecimal valUSD = valBTC.multiply(rate.getPrice_usd());
-        this.balanceConfirmed = this.balanceConfirmed.add(valUSD);
     }
 }

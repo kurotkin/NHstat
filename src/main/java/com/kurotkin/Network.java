@@ -73,7 +73,7 @@ public class Network {
 
                 // Workers BTC
                 List<Worker> workerListBTC = nicehashController.getNicehashBTC().getWorkerList();
-                workerListBTC.stream().forEach(worker -> {
+                workerListBTC.forEach(worker -> {
                     builder.addField("algo_" + worker.getName() + "_profitability_BTC", worker.getProfitability().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_balance_BTC", worker.getBalance().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_speed", worker.getSpeed().doubleValue());
@@ -81,14 +81,14 @@ public class Network {
 
                 // Workers USD
                 List<Worker> workerListUSD = nicehashController.getNicehashUSD().getWorkerList();
-                workerListUSD.stream().forEach(worker -> {
+                workerListUSD.forEach(worker -> {
                     builder.addField("algo_" + worker.getName() + "_profitability_USD", worker.getProfitability().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_balance_USD", worker.getBalance().doubleValue());
                 });
 
                 // Workers RUB
                 List<Worker> workerListRUB = nicehashController.getNicehashRUB().getWorkerList();
-                workerListRUB.stream().forEach(worker -> {
+                workerListRUB.forEach(worker -> {
                     builder.addField("algo_" + worker.getName() + "_profitability_RUB", worker.getProfitability().doubleValue());
                     builder.addField("algo_" + worker.getName() + "_balance_RUB", worker.getBalance().doubleValue());
                 });
