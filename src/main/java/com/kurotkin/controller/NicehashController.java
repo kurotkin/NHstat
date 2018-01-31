@@ -58,15 +58,16 @@ public class NicehashController {
     }
 
     private void query() throws UnirestException {
-        HttpResponse<JsonNode> f = Unirest.get(apiUrl).queryString("method", "stats.provider.ex")
+        responseStr = Unirest.get(apiUrl).queryString("method", "stats.provider.ex")
                 .queryString("addr", addr)
-                .asJson();
-        responseStr = f.getBody().toString();
+                .asJson()
+                .getBody()
+                .toString();
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
         BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
 
         List<Current> currents = rp.result.current;
-        currents.stream().forEach(c -> {
+        currents.forEach(c -> {
             // Parse profitability
             String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
             BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
