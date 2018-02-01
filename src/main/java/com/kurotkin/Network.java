@@ -2,6 +2,7 @@ package com.kurotkin;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
+import com.kurotkin.controller.BalanceController;
 import com.kurotkin.controller.NicehashController;
 import com.kurotkin.controller.Rate;
 import com.kurotkin.model.NicehashBTC;
@@ -34,7 +35,8 @@ public class Network {
         while (true){
             Long t1 = System.currentTimeMillis();
             Rate rate = new Rate();
-            NicehashController nicehashController = new NicehashController(Nicehash, rate, NicehashId, NicehashKey);
+            BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
+            NicehashController nicehashController = new NicehashController(Nicehash, rate, balanceController);
             try {
                 InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
                 influxDB.createDatabase(InfluxDBdbName);
@@ -48,28 +50,54 @@ public class Network {
                 Point.Builder builder = Point.measurement("Bitcoin");
                 builder.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
+                double speed = nicehashController.getSpeed().doubleValue();
+                builder.addField("speed", speed);
+
+                double algo = nicehashController.getAlgo();
+                builder.addField("algo", algo);
+
                 // BTC
                 NicehashBTC nicehashBTC = nicehashController.getNicehashBTC();
-                builder.addField("profitability_BTC", nicehashBTC.getProfitability().doubleValue());
-                builder.addField("balance_BTC", nicehashBTC.getBalance().doubleValue());
-                builder.addField("balanceConfirmed_BTC", nicehashBTC.getBalanceConfirmed().doubleValue());
-                builder.addField("balanceTotal_BTC", nicehashBTC.getBalanceTotal().doubleValue());
-                builder.addField("speed", nicehashController.getSpeed().doubleValue());
-                builder.addField("algo", nicehashController.getAlgo());
+                double profitability_BTC = nicehashBTC.getProfitability().doubleValue();
+                builder.addField("profitability_BTC", profitability_BTC);
+
+                double balance_BTC = nicehashBTC.getBalance().doubleValue();
+                builder.addField("balance_BTC", balance_BTC);
+
+                double balanceConfirmed_BTC = nicehashBTC.getBalanceConfirmed().doubleValue();
+                builder.addField("balanceConfirmed_BTC", balanceConfirmed_BTC);
+
+                double balanceTotal_BTC = nicehashBTC.getBalanceTotal().doubleValue();
+                builder.addField("balanceTotal_BTC", balanceTotal_BTC);
+
 
                 // USD
                 NicehashUSD nicehashUSD = nicehashController.getNicehashUSD();
-                builder.addField("profitability_USD", nicehashUSD.getProfitability().doubleValue());
-                builder.addField("balance_USD", nicehashUSD.getBalance().doubleValue());
-                builder.addField("balanceConfirmed_USD", nicehashUSD.getBalanceConfirmed().doubleValue());
-                builder.addField("balanceTotal_USD", nicehashUSD.getBalanceTotal().doubleValue());
+                double profitability_USD = nicehashUSD.getProfitability().doubleValue();
+                builder.addField("profitability_USD", profitability_USD);
+
+                double balance_USD = nicehashUSD.getBalance().doubleValue();
+                builder.addField("balance_USD", balance_USD);
+
+                double balanceConfirmed_USD = nicehashUSD.getBalanceConfirmed().doubleValue();
+                builder.addField("balanceConfirmed_USD", balanceConfirmed_USD);
+
+                double balanceTotal_USD = nicehashUSD.getBalanceTotal().doubleValue();
+                builder.addField("balanceTotal_USD", balanceTotal_USD);
 
                 // RUB
                 NicehashRUB nicehashRUB = nicehashController.getNicehashRUB();
-                builder.addField("profitability_RUB", nicehashRUB.getProfitability().doubleValue());
-                builder.addField("balance_RUB", nicehashRUB.getBalance().doubleValue());
-                builder.addField("balanceConfirmed_RUB", nicehashRUB.getBalanceConfirmed().doubleValue());
-                builder.addField("balanceTotal_RUB", nicehashRUB.getBalanceTotal().doubleValue());
+                double profitability_RUB = nicehashRUB.getProfitability().doubleValue();
+                builder.addField("profitability_RUB", profitability_RUB);
+
+                double balance_RUB = nicehashRUB.getBalance().doubleValue();
+                builder.addField("balance_RUB", balance_RUB);
+
+                double balanceConfirmed_RUB = nicehashRUB.getBalanceConfirmed().doubleValue();
+                builder.addField("balanceConfirmed_RUB", balanceConfirmed_RUB);
+
+                double balanceTotal_RUB = nicehashRUB.getBalanceTotal().doubleValue();
+                builder.addField("balanceTotal_RUB", balanceTotal_RUB);
 
                 // Workers BTC
                 List<Worker> workerListBTC = nicehashController.getNicehashBTC().getWorkerList();

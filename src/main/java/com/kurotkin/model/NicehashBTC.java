@@ -7,7 +7,7 @@ import java.util.List;
 public class NicehashBTC extends NicehashCurrency implements Nisehash {
 
     public NicehashBTC() {
-        this.profitability = new BigDecimal("0.00000000");
+        profitability = new BigDecimal("0.00000000");
         balance  = new BigDecimal("0.00000000");
         balanceConfirmed = new BigDecimal("0.00000000");
         speed  = new BigDecimal("0.00");
@@ -16,22 +16,22 @@ public class NicehashBTC extends NicehashCurrency implements Nisehash {
 
     @Override
     public void addProfitability(BigDecimal valBTC) {
-        this.profitability = this.profitability.add(valBTC);
+        profitability = profitability.add(valBTC);
     }
 
     @Override
     public void addBalance(BigDecimal valBTC) {
-        this.balance = this.balance.add(valBTC);
+        balance = balance.add(valBTC);
     }
 
     @Override
     public void addBalanceConfirmed(BigDecimal valBTC) {
-        this.balanceConfirmed = this.balanceConfirmed.add(valBTC);
+        balanceConfirmed = balanceConfirmed.add(valBTC);
     }
 
     @Override
     public void addSpeed(BigDecimal valBTC) {
-        this.speed = this.speed.add(valBTC);
+        speed = speed.add(valBTC);
     }
 
     @Override

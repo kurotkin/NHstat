@@ -20,8 +20,6 @@ import java.util.Locale;
 
 public class NicehashController {
     private String addr;
-    private String NicehashId;
-    private String NicehashKey;
     private String responseStr;
     private int algo;
     private BigDecimal speed;
@@ -29,29 +27,22 @@ public class NicehashController {
     private NicehashUSD nicehashUSD;
     private NicehashRUB nicehashRUB;
 
-    public NicehashController(String addr, Rate rate, String NicehashId, String NicehashKey) {
+    public NicehashController(String addr, Rate rate, BalanceController balanceController) {
         this.addr = addr;
-        this.NicehashId = NicehashId;
-        this.NicehashKey = NicehashKey;
         nicehashBTC = new NicehashBTC();
         nicehashUSD = new NicehashUSD(rate);
         nicehashRUB = new NicehashRUB(rate);
+
+        //Confirmed balance
+        nicehashBTC.addBalanceConfirmed(balanceController.getBalance());
+        nicehashUSD.addBalanceConfirmed(balanceController.getBalance());
+        nicehashRUB.addBalanceConfirmed(balanceController.getBalance());
+
         speed = new BigDecimal("0.00");
         try {
            query();
         } catch (Exception E) {
-            try {
-                ResponseProviderWithError result = new Gson().fromJson(responseStr, ResponseProviderWithError.class);
-                String aS[] = result.result.error.split(" ");
-                int timeDelay = Integer.parseInt(aS[13]);
-                System.out.println("Delay " + timeDelay + " sec");
-                Thread.sleep(timeDelay * 1000);
-                query();
-            } catch (Exception Er) {
-                System.err.println(responseStr);
-                E.printStackTrace();
-                Er.printStackTrace();
-            }
+            queryWithError();
         }
     }
 
@@ -63,7 +54,6 @@ public class NicehashController {
                 .getBody()
                 .toString();
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
-        BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
 
         List<Current> currents = rp.result.current;
         currents.forEach(c -> {
@@ -84,11 +74,6 @@ public class NicehashController {
             nicehashBTC.addBalance(currentBalance);
             nicehashUSD.addBalance(currentBalance);
             nicehashRUB.addBalance(currentBalance);
-
-            //  Parse confirmed balance
-            nicehashBTC.addBalanceConfirmed(balanceController.getBalance());
-            nicehashUSD.addBalanceConfirmed(balanceController.getBalance());
-            nicehashRUB.addBalanceConfirmed(balanceController.getBalance());
 
             // Parse speed
             BigDecimal currentSpeed = new BigDecimal("0.00");
@@ -129,6 +114,20 @@ public class NicehashController {
             nicehashUSD.addWorkers(worker);
             nicehashRUB.addWorkers(worker);
         });
+    }
+
+    private void queryWithError(){
+        try {
+            ResponseProviderWithError result = new Gson().fromJson(responseStr, ResponseProviderWithError.class);
+            String aS[] = result.result.error.split(" ");
+            int timeDelay = Integer.parseInt(aS[13]);
+            System.out.println("Delay " + timeDelay + " sec");
+            Thread.sleep(timeDelay * 1000);
+            query();
+        } catch (Exception Er) {
+            System.err.println(responseStr);
+            Er.printStackTrace();
+        }
     }
 
     private String trimAny(String s) {
