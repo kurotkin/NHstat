@@ -1,4 +1,8 @@
 package com.kurotkin.dao;
 
-public interface GenericDAO {
+import java.util.List;
+
+public interface GenericDAO <VAL, ID> {
+    void save(VAL val);
+    void saveAll(List<VAL> list);
 }
