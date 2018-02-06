@@ -121,7 +121,7 @@ public class Network {
                     builder.addField("algo_" + worker.getName() + "_balance_RUB", worker.getBalance().doubleValue());
                 });
 
-                // Price
+                // PriceDAO
                 builder.addField("price_usd", rate.getPrice_usd().doubleValue());
                 builder.addField("price_rub", rate.getPrice_rub().doubleValue());
                 builder.addField("percent_change_1h", rate.getPercent_change_1h().doubleValue());

@@ -11,25 +11,19 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ISimplemultialgoDAO implements SimplemultialgoDAO {
-    private String InfluxDBUser;
-    private String InfluxDBPass;
-    private String InfluxDBdbName;
-    private String InfluxDBUrl;
+    private InfluxDBParam infl;
 
-    public ISimplemultialgoDAO(String InfluxDBUrl, String InfluxDBdbName, String InfluxDBUser, String InfluxDBPass) {
-        this.InfluxDBUrl = InfluxDBUrl;
-        this.InfluxDBdbName = InfluxDBdbName;
-        this.InfluxDBUser = InfluxDBUser;
-        this.InfluxDBPass = InfluxDBPass;
+    public ISimplemultialgoDAO(InfluxDBParam infl) {
+        this.infl = infl;
     }
 
     @Override
     public void save(NicehashSimplemultialgo simplemultialgo) {
         try {
-            InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
-            influxDB.createDatabase(InfluxDBdbName);
+            InfluxDB influxDB = InfluxDBFactory.connect(infl.InfluxDBUrl, infl.InfluxDBUser, infl.InfluxDBPass);
+            influxDB.createDatabase(infl.InfluxDBdbName);
             BatchPoints batchPoints = BatchPoints
-                    .database(InfluxDBdbName)
+                    .database(infl.InfluxDBdbName)
                     .retentionPolicy("autogen")
                     .consistency(InfluxDB.ConsistencyLevel.ALL)
                     .build()
@@ -44,10 +38,10 @@ public class ISimplemultialgoDAO implements SimplemultialgoDAO {
     @Override
     public void saveAll(List<NicehashSimplemultialgo> list) {
         try {
-            InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
-            influxDB.createDatabase(InfluxDBdbName);
+            InfluxDB influxDB = InfluxDBFactory.connect(infl.InfluxDBUrl, infl.InfluxDBUser, infl.InfluxDBPass);
+            influxDB.createDatabase(infl.InfluxDBdbName);
             BatchPoints batchPoints = BatchPoints
-                    .database(InfluxDBdbName)
+                    .database(infl.InfluxDBdbName)
                     .retentionPolicy("autogen")
                     .consistency(InfluxDB.ConsistencyLevel.ALL)
                     .build();
