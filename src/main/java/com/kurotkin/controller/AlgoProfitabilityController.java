@@ -3,10 +3,12 @@ package com.kurotkin.controller;
 import com.google.gson.Gson;
 import com.kurotkin.api.com.nicehash.api.simplemultialgo.Simplemultialgo;
 import com.kurotkin.api.com.nicehash.api.simplemultialgo.SimplemultialgoObject;
+import com.kurotkin.model.NicehashSimplemultialgo;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class AlgoProfitabilityController {
@@ -39,5 +41,7 @@ public class AlgoProfitabilityController {
     public int getIdMaxAlgo(){
         return getMaxPayAlgo().algo;
     }
+
+    public List<NicehashSimplemultialgo> getListOf
 
 }

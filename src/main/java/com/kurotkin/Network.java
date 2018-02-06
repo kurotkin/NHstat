@@ -2,13 +2,13 @@ package com.kurotkin;
 
 import com.esotericsoftware.yamlbeans.YamlException;
 import com.esotericsoftware.yamlbeans.YamlReader;
+import com.kurotkin.controller.AlgoProfitabilityController;
 import com.kurotkin.controller.BalanceController;
 import com.kurotkin.controller.NicehashController;
 import com.kurotkin.controller.Rate;
-import com.kurotkin.model.NicehashBTC;
-import com.kurotkin.model.NicehashRUB;
-import com.kurotkin.model.NicehashUSD;
-import com.kurotkin.model.Worker;
+import com.kurotkin.dao.influxdb.IPriceDAO;
+import com.kurotkin.dao.influxdb.ISimplemultialgoDAO;
+import com.kurotkin.model.*;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.BatchPoints;
@@ -29,6 +29,7 @@ public class Network {
     private static String InfluxDBUser;
     private static String InfluxDBPass;
     private static String InfluxDBdbName;
+    private static InfluxDBParam inflParam;
 
     public static void main(String[] args) {
         loadSetting();
@@ -37,6 +38,17 @@ public class Network {
             Rate rate = new Rate();
             BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
             NicehashController nicehashController = new NicehashController(Nicehash, rate, balanceController);
+            AlgoProfitabilityController algoProfitabilityController = new AlgoProfitabilityController();
+
+            // Price
+            IPriceDAO iPriceDAO = new IPriceDAO(inflParam);
+            iPriceDAO.save(rate);
+
+            // Prof. algo
+            ISimplemultialgoDAO iSimplemultialgoDAO = new ISimplemultialgoDAO(inflParam);
+
+
+
             try {
                 InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
                 influxDB.createDatabase(InfluxDBdbName);
@@ -55,6 +67,8 @@ public class Network {
 
                 double algo = nicehashController.getAlgo();
                 builder.addField("algo", algo);
+
+
 
                 // BTC
                 NicehashBTC nicehashBTC = nicehashController.getNicehashBTC();
@@ -121,12 +135,6 @@ public class Network {
                     builder.addField("algo_" + worker.getName() + "_balance_RUB", worker.getBalance().doubleValue());
                 });
 
-                // PriceDAO
-                builder.addField("price_usd", rate.getPrice_usd().doubleValue());
-                builder.addField("price_rub", rate.getPrice_rub().doubleValue());
-                builder.addField("percent_change_1h", rate.getPercent_change_1h().doubleValue());
-                builder.addField("percent_change_24h", rate.getPercent_change_24h().doubleValue());
-                builder.addField("percent_change_7d", rate.getPercent_change_7d().doubleValue());
 
                 batchPoints.point(builder.build());
                 influxDB.write(batchPoints);
@@ -159,6 +167,7 @@ public class Network {
             InfluxDBUser = map.get("InfluxDBUser").toString();
             InfluxDBPass = map.get("InfluxDBPass").toString();
             InfluxDBdbName = map.get("InfluxDBdbName").toString();
+            inflParam = new InfluxDBParam(InfluxDBUrl, InfluxDBdbName, InfluxDBUser, InfluxDBPass);
             System.out.println("Starting with param: " + Nicehash + " "
                     + InfluxDBUser + ":" + InfluxDBPass + "@" + InfluxDBUrl + "/"
                     + InfluxDBdbName);
