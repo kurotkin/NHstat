@@ -9,6 +9,7 @@ import com.kurotkin.controller.Rate;
 import com.kurotkin.dao.influxdb.INicehashIntegralDAO;
 import com.kurotkin.dao.influxdb.IPriceDAO;
 import com.kurotkin.dao.influxdb.ISimplemultialgoDAO;
+import com.kurotkin.dao.influxdb.IWorkerDAO;
 import com.kurotkin.model.*;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -26,10 +27,7 @@ public class Network {
     private static String Nicehash;
     private static String NicehashId;
     private static String NicehashKey;
-    private static String InfluxDBUrl;
-    private static String InfluxDBUser;
-    private static String InfluxDBPass;
-    private static String InfluxDBdbName;
+
     private static InfluxDBParam inflParam;
 
     public static void main(String[] args) {
@@ -53,60 +51,21 @@ public class Network {
             INicehashIntegralDAO iNicehashIntegralDAO = new INicehashIntegralDAO(inflParam);
             iNicehashIntegralDAO.save(nicehashController.getNicehashIntegral());
 
-            try {
-                InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
-                influxDB.createDatabase(InfluxDBdbName);
-                BatchPoints batchPoints = BatchPoints
-                        .database(InfluxDBdbName)
-                        //.tag("async", "true")
-                        .retentionPolicy("autogen")
-                        .consistency(InfluxDB.ConsistencyLevel.ALL)
-                        .build();
+            // Workers BTC
+            List<Worker> workerListBTC = nicehashController.getNicehashBTC().getWorkerList();
+            IWorkerDAO iWorkerDAO_BTC = new IWorkerDAO(inflParam, "BTC");
+            iWorkerDAO_BTC.saveAll(workerListBTC);
 
-                Point.Builder builder = Point.measurement("Bitcoin");
-                builder.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+            // Workers USD
+            List<Worker> workerListUSD = nicehashController.getNicehashUSD().getWorkerList();
+            IWorkerDAO iWorkerDAO_USD = new IWorkerDAO(inflParam, "USD");
+            iWorkerDAO_USD.saveAll(workerListUSD);
 
+            // Workers RUB
+            List<Worker> workerListRUB = nicehashController.getNicehashRUB().getWorkerList();
+            IWorkerDAO iWorkerDAO_RUB = new IWorkerDAO(inflParam, "RUB");
+            iWorkerDAO_RUB.saveAll(workerListRUB);
 
-
-                // Workers BTC
-                List<Worker> workerListBTC = nicehashController.getNicehashBTC().getWorkerList();
-                workerListBTC.forEach(worker -> {
-                    builder.addField("algo_" + worker.getName() + "_profitability_BTC", worker.getProfitability().doubleValue());
-                    builder.addField("algo_" + worker.getName() + "_balance_BTC", worker.getBalance().doubleValue());
-                    builder.addField("algo_" + worker.getName() + "_speed", worker.getSpeed().doubleValue());
-                });
-
-                // Workers USD
-                List<Worker> workerListUSD = nicehashController.getNicehashUSD().getWorkerList();
-                workerListUSD.forEach(worker -> {
-                    builder.addField("algo_" + worker.getName() + "_profitability_USD", worker.getProfitability().doubleValue());
-                    builder.addField("algo_" + worker.getName() + "_balance_USD", worker.getBalance().doubleValue());
-                });
-
-                // Workers RUB
-                List<Worker> workerListRUB = nicehashController.getNicehashRUB().getWorkerList();
-                workerListRUB.forEach(worker -> {
-                    builder.addField("algo_" + worker.getName() + "_profitability_RUB", worker.getProfitability().doubleValue());
-                    builder.addField("algo_" + worker.getName() + "_balance_RUB", worker.getBalance().doubleValue());
-                });
-
-
-                batchPoints.point(builder.build());
-                influxDB.write(batchPoints);
-            }
-            catch (Exception e){
-                System.out.println("Создание БД слишком долгое: " + e);
-            }
-
-            Long t2 = System.currentTimeMillis();
-            Long dt = t2 - t1;
-            System.out.println("Запись... Время записи " + dt + "ms");
-
-            try {
-                Thread.sleep(120000 - dt);
-            }catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -118,14 +77,11 @@ public class Network {
             Nicehash = map.get("Nicehash").toString();
             NicehashId = map.get("NicehashId").toString();
             NicehashKey = map.get("NicehashKeyOnlyRead").toString();
-            InfluxDBUrl = map.get("InfluxDBUrl").toString();
-            InfluxDBUser = map.get("InfluxDBUser").toString();
-            InfluxDBPass = map.get("InfluxDBPass").toString();
-            InfluxDBdbName = map.get("InfluxDBdbName").toString();
-            inflParam = new InfluxDBParam(InfluxDBUrl, InfluxDBdbName, InfluxDBUser, InfluxDBPass);
-            System.out.println("Starting with param: " + Nicehash + " "
-                    + InfluxDBUser + ":" + InfluxDBPass + "@" + InfluxDBUrl + "/"
-                    + InfluxDBdbName);
+            inflParam = new InfluxDBParam().withUrl(map.get("InfluxDBUrl").toString())
+                    .withDBName(map.get("InfluxDBdbName").toString())
+                    .withDBUser(map.get("InfluxDBUser").toString())
+                    .withDBPass(map.get("InfluxDBPass").toString());
+            System.out.println("Starting with param: " + Nicehash );
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (YamlException e) {

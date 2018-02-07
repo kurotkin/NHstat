@@ -12,4 +12,27 @@ public class InfluxDBParam {
         InfluxDBUser = influxDBUser;
         InfluxDBPass = influxDBPass;
     }
+
+    public InfluxDBParam() {
+    }
+
+    public InfluxDBParam withUrl(String influxDBUrl) {
+        InfluxDBUrl = influxDBUrl;
+        return this;
+    }
+
+    public InfluxDBParam withDBName(String influxDBdbName) {
+        InfluxDBdbName = influxDBdbName;
+        return this;
+    }
+
+    public InfluxDBParam withDBUser(String influxDBUser) {
+        InfluxDBUser = influxDBUser;
+        return this;
+    }
+
+    public InfluxDBParam withDBPass(String influxDBPass) {
+        InfluxDBPass = influxDBPass;
+        return this;
+    }
 }
