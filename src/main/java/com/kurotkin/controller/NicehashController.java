@@ -5,10 +5,7 @@ import com.kurotkin.api.com.nicehash.api.stats.provider.ex.Current;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.DataString;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProvider;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProviderWithError;
-import com.kurotkin.model.NicehashBTC;
-import com.kurotkin.model.NicehashRUB;
-import com.kurotkin.model.NicehashUSD;
-import com.kurotkin.model.Worker;
+import com.kurotkin.model.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -26,6 +23,7 @@ public class NicehashController {
     private NicehashBTC nicehashBTC;
     private NicehashUSD nicehashUSD;
     private NicehashRUB nicehashRUB;
+    private NicehashIntegral nicehashIntegral;
 
     public NicehashController(String addr, Rate rate, BalanceController balanceController) {
         this.addr = addr;
