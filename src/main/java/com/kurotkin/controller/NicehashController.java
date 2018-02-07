@@ -18,31 +18,24 @@ import java.util.Locale;
 public class NicehashController {
     private String addr;
     private String responseStr;
-    private int algo;
-    private BigDecimal speed;
-    private NicehashBTC nicehashBTC;
-    private NicehashUSD nicehashUSD;
-    private NicehashRUB nicehashRUB;
     private NicehashIntegral nicehashIntegral;
 
     public NicehashController(String addr, Rate rate, BalanceController balanceController) {
         this.addr = addr;
-        nicehashBTC = new NicehashBTC();
-        nicehashUSD = new NicehashUSD(rate);
-        nicehashRUB = new NicehashRUB(rate);
+        nicehashIntegral = new NicehashIntegral(rate);
 
         //Confirmed balance
-        nicehashBTC.addBalanceConfirmed(balanceController.getBalance());
-        nicehashUSD.addBalanceConfirmed(balanceController.getBalance());
-        nicehashRUB.addBalanceConfirmed(balanceController.getBalance());
+        nicehashIntegral.nicehashBTC.addBalanceConfirmed(balanceController.getBalance());
+        nicehashIntegral.nicehashUSD.addBalanceConfirmed(balanceController.getBalance());
+        nicehashIntegral.nicehashRUB.addBalanceConfirmed(balanceController.getBalance());
 
-        speed = new BigDecimal("0.00");
         try {
            query();
         } catch (Exception E) {
             queryWithError();
         }
     }
+
 
     private void query() throws UnirestException {
         responseStr = Unirest.get("https://api.nicehash.com/api")
@@ -58,9 +51,9 @@ public class NicehashController {
             // Parse profitability
             String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
             BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
-            nicehashBTC.addProfitability(currentProfitability);
-            nicehashUSD.addProfitability(currentProfitability);
-            nicehashRUB.addProfitability(currentProfitability);
+            nicehashIntegral.nicehashBTC.addProfitability(currentProfitability);
+            nicehashIntegral.nicehashUSD.addProfitability(currentProfitability);
+            nicehashIntegral.nicehashRUB.addProfitability(currentProfitability);
 
             // Parse data
             String dataString = c.data.toString();
@@ -69,9 +62,9 @@ public class NicehashController {
 
             // Parse balance
             BigDecimal currentBalance = new BigDecimal(aS[1]);
-            nicehashBTC.addBalance(currentBalance);
-            nicehashUSD.addBalance(currentBalance);
-            nicehashRUB.addBalance(currentBalance);
+            nicehashIntegral.nicehashBTC.addBalance(currentBalance);
+            nicehashIntegral.nicehashUSD.addBalance(currentBalance);
+            nicehashIntegral.nicehashRUB.addBalance(currentBalance);
 
             // Parse speed
             BigDecimal currentSpeed = new BigDecimal("0.00");
@@ -93,12 +86,11 @@ public class NicehashController {
                     BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
                     currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000"));
                 }
-                speed = speed.add(currentSpeed);
-                algo = c.algo;
+                nicehashIntegral.speed = nicehashIntegral.speed.add(currentSpeed);
             }
-            nicehashBTC.addSpeed(currentSpeed);
-            nicehashUSD.addSpeed(currentSpeed);
-            nicehashRUB.addSpeed(currentSpeed);
+            nicehashIntegral.nicehashBTC.addSpeed(currentSpeed);
+            nicehashIntegral.nicehashUSD.addSpeed(currentSpeed);
+            nicehashIntegral.nicehashRUB.addSpeed(currentSpeed);
 
             // Current worker
             Worker worker = new Worker().withName(c.name)
@@ -108,9 +100,9 @@ public class NicehashController {
                     .withSpeed(currentSpeed)
                     .withSuffix(c.suffix);
 
-            nicehashBTC.addWorkers(worker);
-            nicehashUSD.addWorkers(worker);
-            nicehashRUB.addWorkers(worker);
+            nicehashIntegral.nicehashBTC.addWorkers(worker);
+            nicehashIntegral.nicehashUSD.addWorkers(worker);
+            nicehashIntegral.nicehashRUB.addWorkers(worker);
         });
     }
 
@@ -132,23 +124,25 @@ public class NicehashController {
         return s.substring(1, s.length() - 1);
     }
 
-    public int getAlgo() {
-        return algo;
-    }
 
     public BigDecimal getSpeed() {
-        return speed;
+        return nicehashIntegral.speed;
     }
 
     public NicehashBTC getNicehashBTC() {
-        return nicehashBTC;
+        return nicehashIntegral.nicehashBTC;
     }
 
     public NicehashUSD getNicehashUSD() {
-        return nicehashUSD;
+        return nicehashIntegral.nicehashUSD;
     }
 
     public NicehashRUB getNicehashRUB() {
-        return nicehashRUB;
+        return nicehashIntegral.nicehashRUB;
     }
+
+    public NicehashIntegral getNicehashIntegral() {
+        return nicehashIntegral;
+    }
+
 }

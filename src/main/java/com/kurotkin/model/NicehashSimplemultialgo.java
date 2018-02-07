@@ -15,6 +15,7 @@ public class NicehashSimplemultialgo {
         this.algo = algo;
     }
 
+
     public BigDecimal getPaying() {
         return paying;
     }

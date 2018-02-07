@@ -6,6 +6,7 @@ import com.kurotkin.controller.AlgoProfitabilityController;
 import com.kurotkin.controller.BalanceController;
 import com.kurotkin.controller.NicehashController;
 import com.kurotkin.controller.Rate;
+import com.kurotkin.dao.influxdb.INicehashIntegralDAO;
 import com.kurotkin.dao.influxdb.IPriceDAO;
 import com.kurotkin.dao.influxdb.ISimplemultialgoDAO;
 import com.kurotkin.model.*;
@@ -46,8 +47,11 @@ public class Network {
 
             // Prof. algo
             ISimplemultialgoDAO iSimplemultialgoDAO = new ISimplemultialgoDAO(inflParam);
+            iSimplemultialgoDAO.saveAll(algoProfitabilityController.getProfAlgoList());
 
-
+            // Integral Params
+            INicehashIntegralDAO iNicehashIntegralDAO = new INicehashIntegralDAO(inflParam);
+            iNicehashIntegralDAO.save(nicehashController.getNicehashIntegral());
 
             try {
                 InfluxDB influxDB = InfluxDBFactory.connect(InfluxDBUrl, InfluxDBUser, InfluxDBPass);
@@ -62,56 +66,7 @@ public class Network {
                 Point.Builder builder = Point.measurement("Bitcoin");
                 builder.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
-                double speed = nicehashController.getSpeed().doubleValue();
-                builder.addField("speed", speed);
 
-                double algo = nicehashController.getAlgo();
-                builder.addField("algo", algo);
-
-
-
-                // BTC
-                NicehashBTC nicehashBTC = nicehashController.getNicehashBTC();
-                double profitability_BTC = nicehashBTC.getProfitability().doubleValue();
-                builder.addField("profitability_BTC", profitability_BTC);
-
-                double balance_BTC = nicehashBTC.getBalance().doubleValue();
-                builder.addField("balance_BTC", balance_BTC);
-
-                double balanceConfirmed_BTC = nicehashBTC.getBalanceConfirmed().doubleValue();
-                builder.addField("balanceConfirmed_BTC", balanceConfirmed_BTC);
-
-                double balanceTotal_BTC = nicehashBTC.getBalanceTotal().doubleValue();
-                builder.addField("balanceTotal_BTC", balanceTotal_BTC);
-
-
-                // USD
-                NicehashUSD nicehashUSD = nicehashController.getNicehashUSD();
-                double profitability_USD = nicehashUSD.getProfitability().doubleValue();
-                builder.addField("profitability_USD", profitability_USD);
-
-                double balance_USD = nicehashUSD.getBalance().doubleValue();
-                builder.addField("balance_USD", balance_USD);
-
-                double balanceConfirmed_USD = nicehashUSD.getBalanceConfirmed().doubleValue();
-                builder.addField("balanceConfirmed_USD", balanceConfirmed_USD);
-
-                double balanceTotal_USD = nicehashUSD.getBalanceTotal().doubleValue();
-                builder.addField("balanceTotal_USD", balanceTotal_USD);
-
-                // RUB
-                NicehashRUB nicehashRUB = nicehashController.getNicehashRUB();
-                double profitability_RUB = nicehashRUB.getProfitability().doubleValue();
-                builder.addField("profitability_RUB", profitability_RUB);
-
-                double balance_RUB = nicehashRUB.getBalance().doubleValue();
-                builder.addField("balance_RUB", balance_RUB);
-
-                double balanceConfirmed_RUB = nicehashRUB.getBalanceConfirmed().doubleValue();
-                builder.addField("balanceConfirmed_RUB", balanceConfirmed_RUB);
-
-                double balanceTotal_RUB = nicehashRUB.getBalanceTotal().doubleValue();
-                builder.addField("balanceTotal_RUB", balanceTotal_RUB);
 
                 // Workers BTC
                 List<Worker> workerListBTC = nicehashController.getNicehashBTC().getWorkerList();

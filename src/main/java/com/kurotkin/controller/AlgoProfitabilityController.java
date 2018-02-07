@@ -7,6 +7,8 @@ import com.kurotkin.model.NicehashSimplemultialgo;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -42,6 +44,13 @@ public class AlgoProfitabilityController {
         return getMaxPayAlgo().algo;
     }
 
-    public List<NicehashSimplemultialgo> getListOf
+    public List<NicehashSimplemultialgo> getProfAlgoList(){
+        List<NicehashSimplemultialgo> list = new ArrayList<>();
+        simplemultialgo.result.simplemultialgo.forEach(algo -> {
+            NicehashSimplemultialgo nsa = new NicehashSimplemultialgo(new BigDecimal(algo.paying),algo.port, algo.name, algo.algo);
+            list.add(nsa);
+        });
+        return list;
+    }
 
 }
