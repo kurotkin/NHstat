@@ -48,13 +48,6 @@ public class NicehashController {
 
         List<Current> currents = rp.result.current;
         currents.forEach(c -> {
-            // Parse profitability
-            String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
-            BigDecimal currentProfitability = new BigDecimal(currentProfitabilityString);
-            nicehashIntegral.nicehashBTC.addProfitability(currentProfitability);
-            nicehashIntegral.nicehashUSD.addProfitability(currentProfitability);
-            nicehashIntegral.nicehashRUB.addProfitability(currentProfitability);
-
             // Parse data
             String dataString = c.data.toString();
             dataString = trimAny(dataString);
@@ -91,6 +84,18 @@ public class NicehashController {
             nicehashIntegral.nicehashBTC.addSpeed(currentSpeed);
             nicehashIntegral.nicehashUSD.addSpeed(currentSpeed);
             nicehashIntegral.nicehashRUB.addSpeed(currentSpeed);
+
+            // Parse profitability
+            String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);
+            BigDecimal currentProfitability;
+            if(currentSpeed.equals(new BigDecimal("0.00"))){
+                currentProfitability = new BigDecimal("0.00");
+            }else{
+                currentProfitability = new BigDecimal(currentProfitabilityString);
+            }
+            nicehashIntegral.nicehashBTC.addProfitability(currentProfitability);
+            nicehashIntegral.nicehashUSD.addProfitability(currentProfitability);
+            nicehashIntegral.nicehashRUB.addProfitability(currentProfitability);
 
             // Current worker
             Worker worker = new Worker().withName(c.name)
