@@ -60,27 +60,8 @@ public class NicehashController {
             nicehashIntegral.nicehashRUB.addBalance(currentBalance);
 
             // Parse speed
-            BigDecimal currentSpeed = new BigDecimal("0.00");
-            if (!aS[0].equals("{}")) {                                       // if worker is in work, NOT "{}"
-                double currentSpeedDouble = new Gson().fromJson(aS[0], DataString.class).a;
-                String currentSpeedString = String.format(Locale.US,"%.2f", currentSpeedDouble);
-                if(c.suffix.equals("H")){
-                    BigDecimal currentSpeedInH = new BigDecimal(currentSpeedString);
-                    currentSpeed = currentSpeedInH.multiply(new BigDecimal("0.000001"));
-                }
-                if(c.suffix.equals("kH")){
-                    BigDecimal currentSpeedInkH = new BigDecimal(currentSpeedString);
-                    currentSpeed = currentSpeedInkH.multiply(new BigDecimal("0.001"));
-                }
-                if(c.suffix.equals("MH")){
-                    currentSpeed = new BigDecimal(currentSpeedString);
-                }
-                if(c.suffix.equals("GH")){
-                    BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
-                    currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000"));
-                }
-                nicehashIntegral.speed = nicehashIntegral.speed.add(currentSpeed);
-            }
+            BigDecimal currentSpeed = calcSpeed(aS[0], c.suffix);
+            nicehashIntegral.speed = nicehashIntegral.speed.add(currentSpeed);
             nicehashIntegral.nicehashBTC.addSpeed(currentSpeed);
             nicehashIntegral.nicehashUSD.addSpeed(currentSpeed);
             nicehashIntegral.nicehashRUB.addSpeed(currentSpeed);
@@ -109,6 +90,30 @@ public class NicehashController {
             nicehashIntegral.nicehashUSD.addWorkers(worker);
             nicehashIntegral.nicehashRUB.addWorkers(worker);
         });
+    }
+
+    private BigDecimal calcSpeed(String str, String suffix){
+        BigDecimal currentSpeed = new BigDecimal("0.00");
+        if (!str.equals("{}")) {                                       // if worker is in work, NOT "{}"
+            double currentSpeedDouble = new Gson().fromJson(str, DataString.class).a;
+            String currentSpeedString = String.format(Locale.US,"%.2f", currentSpeedDouble);
+            if(suffix.equals("H")){
+                BigDecimal currentSpeedInH = new BigDecimal(currentSpeedString);
+                currentSpeed = currentSpeedInH.multiply(new BigDecimal("0.000001"));
+            }
+            if(suffix.equals("kH")){
+                BigDecimal currentSpeedInkH = new BigDecimal(currentSpeedString);
+                currentSpeed = currentSpeedInkH.multiply(new BigDecimal("0.001"));
+            }
+            if(suffix.equals("MH")){
+                currentSpeed = new BigDecimal(currentSpeedString);
+            }
+            if(suffix.equals("GH")){
+                BigDecimal currentSpeedInMH = new BigDecimal(currentSpeedString);
+                currentSpeed = currentSpeedInMH.multiply(new BigDecimal("1000"));
+            }
+        }
+        return currentSpeed;
     }
 
     private void queryWithError(){
