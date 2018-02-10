@@ -11,6 +11,7 @@ import com.kurotkin.dao.influxdb.IPriceDAO;
 import com.kurotkin.dao.influxdb.ISimplemultialgoDAO;
 import com.kurotkin.dao.influxdb.IWorkerDAO;
 import com.kurotkin.model.*;
+import com.kurotkin.utils.TimeDelay;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.BatchPoints;
@@ -33,7 +34,8 @@ public class Network {
     public static void main(String[] args) {
         loadSetting();
         while (true){
-            Long t1 = System.currentTimeMillis();
+            TimeDelay td = new TimeDelay(120000L);
+
             Rate rate = new Rate();
             BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
             NicehashController nicehashController = new NicehashController(Nicehash, rate, balanceController);
@@ -66,6 +68,7 @@ public class Network {
             IWorkerDAO iWorkerDAO_RUB = new IWorkerDAO(inflParam, "RUB");
             iWorkerDAO_RUB.saveAll(workerListRUB);
 
+            td.getTime();
         }
     }
 
