@@ -83,7 +83,7 @@ public class INicehashIntegralDAO implements NicehashIntegralDAO {
             influxDB.write(batchPoints);
         }
         catch (Exception e){
-            System.out.println("Ошибка создания записи по интегральным параметрам: " + e);
+            System.err.println("Ошибка создания записи по интегральным параметрам: " + e);
         }
     }
 

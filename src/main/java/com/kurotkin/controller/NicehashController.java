@@ -117,6 +117,7 @@ public class NicehashController {
     }
 
     private void queryWithError(){
+        System.err.println("API занят");
         try {
             ResponseProviderWithError result = new Gson().fromJson(responseStr, ResponseProviderWithError.class);
             String aS[] = result.result.error.split(" ");
@@ -125,8 +126,7 @@ public class NicehashController {
             Thread.sleep(timeDelay * 1000);
             query();
         } catch (Exception Er) {
-            System.err.println(responseStr);
-            Er.printStackTrace();
+            System.err.println("Ошибка Nicehash: " + Er);
         }
     }
 

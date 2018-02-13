@@ -41,7 +41,7 @@ public class IPriceDAO implements PriceDAO {
             influxDB.write(batchPoints);
         }
         catch (Exception e){
-            System.out.println("Ошибка записи курса валют: " + e);
+            System.err.println("Ошибка записи курса валют: " + e);
         }
     }
 

@@ -3,7 +3,7 @@
 Nicehash: 0
 NicehashId: 0
 NicehashKeyOnlyRead: 0
-#InfluxDBUrl: http://127.0.0.1:8086
+InfluxDBUrl: http://127.0.0.1:8086
 InfluxDBUser: root
 InfluxDBPass: root
-InfluxDBdbName: name
+InfluxDBdbName: aTimeSeries

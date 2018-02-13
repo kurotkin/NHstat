@@ -36,7 +36,7 @@ public class Rate {
             percent_change_7d = new BigDecimal(bitcoinRub.percent_change_7d);
             last_updated = new Date(Long.parseLong(bitcoinRub.last_updated));
         } catch (UnirestException e) {
-            e.printStackTrace();
+            System.err.println("Ошибка скачивания курсов валют: " + e);
         }
     }
 

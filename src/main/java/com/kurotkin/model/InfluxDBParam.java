@@ -35,4 +35,14 @@ public class InfluxDBParam {
         InfluxDBPass = influxDBPass;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "InfluxDBParam{" +
+                "InfluxDBUrl='" + InfluxDBUrl + '\'' +
+                ", InfluxDBdbName='" + InfluxDBdbName + '\'' +
+                ", InfluxDBUser='" + InfluxDBUser + '\'' +
+                ", InfluxDBPass='" + InfluxDBPass + '\'' +
+                '}';
+    }
 }

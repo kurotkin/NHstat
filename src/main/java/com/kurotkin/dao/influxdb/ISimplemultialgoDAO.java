@@ -31,7 +31,7 @@ public class ISimplemultialgoDAO implements SimplemultialgoDAO {
             influxDB.write(batchPoints);
         }
         catch (Exception e){
-            System.out.println("Ошибка записи прибыльности для алгоритма " + simplemultialgo.getName() + ": " + e);
+            System.out.println("Ошибка записи прибыльности для алгоритма: " + e);
         }
     }
 
@@ -53,7 +53,7 @@ public class ISimplemultialgoDAO implements SimplemultialgoDAO {
             influxDB.write(batchPoints);
         }
         catch (Exception e){
-            System.out.println("Ошибка записи прибыльности для алгоритмов: " + e);
+            System.err.println("Ошибка записи прибыльности для алгоритмов: " + e);
         }
     }
 

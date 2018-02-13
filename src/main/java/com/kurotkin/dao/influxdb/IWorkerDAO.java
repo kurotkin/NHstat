@@ -40,7 +40,7 @@ public class IWorkerDAO implements WorkerDAO {
             influxDB.write(batchPoints);
         }
         catch (Exception e){
-            System.out.println("Ошибка записи worker: " + e);
+            System.err.println("Ошибка записи worker: " + e);
         }
     }
 

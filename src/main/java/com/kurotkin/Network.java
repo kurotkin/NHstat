@@ -84,7 +84,12 @@ public class Network {
                     .withDBName(map.get("InfluxDBdbName").toString())
                     .withDBUser(map.get("InfluxDBUser").toString())
                     .withDBPass(map.get("InfluxDBPass").toString());
-            System.out.println("Starting with param: " + Nicehash );
+
+            System.out.println("Starting with param:");
+            System.out.println("\tNicehash = " + Nicehash);
+            System.out.println("\tNicehashId = " + NicehashId);
+            System.out.println("\tNicehashKey = " + NicehashKey );
+            System.out.println("\t" + inflParam.toString());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (YamlException e) {
