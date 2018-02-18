@@ -5,23 +5,18 @@ import com.esotericsoftware.yamlbeans.YamlReader;
 import com.kurotkin.controller.AlgoProfitabilityController;
 import com.kurotkin.controller.BalanceController;
 import com.kurotkin.controller.NicehashController;
-import com.kurotkin.controller.Rate;
+import com.kurotkin.controller.RateController;
 import com.kurotkin.dao.influxdb.INicehashIntegralDAO;
 import com.kurotkin.dao.influxdb.IPriceDAO;
 import com.kurotkin.dao.influxdb.ISimplemultialgoDAO;
 import com.kurotkin.dao.influxdb.IWorkerDAO;
 import com.kurotkin.model.*;
 import com.kurotkin.utils.TimeDelay;
-import org.influxdb.InfluxDB;
-import org.influxdb.InfluxDBFactory;
-import org.influxdb.dto.BatchPoints;
-import org.influxdb.dto.Point;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class Network {
 
@@ -36,14 +31,14 @@ public class Network {
         while (true){
             TimeDelay td = new TimeDelay(120000L);
 
-            Rate rate = new Rate();
+            RateController rateController = new RateController();
             BalanceController balanceController = new BalanceController(NicehashId, NicehashKey);
-            NicehashController nicehashController = new NicehashController(Nicehash, rate, balanceController);
+            NicehashController nicehashController = new NicehashController(Nicehash, rateController, balanceController);
             AlgoProfitabilityController algoProfitabilityController = new AlgoProfitabilityController();
 
             // Price
             IPriceDAO iPriceDAO = new IPriceDAO(inflParam);
-            iPriceDAO.save(rate);
+            iPriceDAO.save(rateController);
 
             // Prof. algo
             ISimplemultialgoDAO iSimplemultialgoDAO = new ISimplemultialgoDAO(inflParam);

@@ -108,7 +108,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        com.mvn.App
+                                        com.kurotkin.Network
                                     </mainClass>
                                 </manifest>
                             </archive>

@@ -46,9 +46,14 @@ public class AlgoProfitabilityController {
 
     public List<NicehashSimplemultialgo> getProfAlgoList(){
         List<NicehashSimplemultialgo> list = new ArrayList<>();
-        simplemultialgo.result.simplemultialgo.forEach(algo -> {
-            NicehashSimplemultialgo nsa = new NicehashSimplemultialgo(new BigDecimal(algo.paying),algo.port, algo.name, algo.algo);
-            list.add(nsa);
+        simplemultialgo.result.simplemultialgo.forEach(
+                algo -> {
+                    NicehashSimplemultialgo nsa = new NicehashSimplemultialgo(
+                        new BigDecimal(algo.paying),
+                        algo.port,
+                        algo.name,
+                        algo.algo);
+                    list.add(nsa);
         });
         return list;
     }

@@ -11,7 +11,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Rate {
+public class RateController {
     private String apiUrl = "https://api.coinmarketcap.com/v1/ticker/bitcoin/";
     private String name;
     private BigDecimal price_usd;
@@ -21,7 +21,7 @@ public class Rate {
     private Date last_updated;
     private BigDecimal price_rub;
 
-    public Rate() {
+    public RateController() {
         try {
             HttpResponse<JsonNode> coinHttpResponse = Unirest.get(apiUrl).queryString("convert", "RUB").asJson();
             String coinResultString = "{result:" + coinHttpResponse.getBody().toString() + "}";
@@ -74,7 +74,7 @@ public class Rate {
 
     @Override
     public String toString() {
-        return "Rate{" + "name='" + name + '\'' +
+        return "RateController{" + "name='" + name + '\'' +
                 ", price_usd=" + price_usd +
                 ", percent_change_1h=" + percent_change_1h +
                 ", percent_change_24h=" + percent_change_24h +

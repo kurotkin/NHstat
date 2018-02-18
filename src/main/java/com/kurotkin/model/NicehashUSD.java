@@ -1,15 +1,15 @@
 package com.kurotkin.model;
 
-import com.kurotkin.controller.Rate;
+import com.kurotkin.controller.RateController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class NicehashUSD extends NicehashCurrency implements Nisehash {
-    private Rate rate;
+    private RateController rateController;
 
-    public NicehashUSD(Rate rate) {
-        this.rate = rate;
+    public NicehashUSD(RateController rateController) {
+        this.rateController = rateController;
         profitability = new BigDecimal("0.00");
         balance  = new BigDecimal("0.00");
         balanceConfirmed = new BigDecimal("0.00");
@@ -19,19 +19,19 @@ public class NicehashUSD extends NicehashCurrency implements Nisehash {
 
     @Override
     public void addProfitability(BigDecimal valBTC) {
-        BigDecimal valUSD = valBTC.multiply(rate.getPrice_usd());
+        BigDecimal valUSD = valBTC.multiply(rateController.getPrice_usd());
         profitability = profitability.add(valUSD);
     }
 
     @Override
     public void addBalance(BigDecimal valBTC) {
-        BigDecimal valUSD = valBTC.multiply(rate.getPrice_usd());
+        BigDecimal valUSD = valBTC.multiply(rateController.getPrice_usd());
         balance = balance.add(valUSD);
     }
 
     @Override
     public void addBalanceConfirmed(BigDecimal valBTC) {
-        BigDecimal valUSD = valBTC.multiply(rate.getPrice_usd());
+        BigDecimal valUSD = valBTC.multiply(rateController.getPrice_usd());
         balanceConfirmed = balanceConfirmed.add(valUSD);
     }
 
@@ -42,8 +42,8 @@ public class NicehashUSD extends NicehashCurrency implements Nisehash {
 
     @Override
     public void addWorkers(Worker worker) {
-        worker.profitability = worker.profitability.multiply(rate.getPrice_usd());
-        worker.balance = worker.balance.multiply(rate.getPrice_usd());
+        worker.profitability = worker.profitability.multiply(rateController.getPrice_usd());
+        worker.balance = worker.balance.multiply(rateController.getPrice_usd());
         workerList.add(worker);
     }
 }

@@ -6,8 +6,6 @@ import com.kurotkin.api.com.nicehash.api.stats.provider.ex.DataString;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProvider;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProviderWithError;
 import com.kurotkin.model.*;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -20,9 +18,9 @@ public class NicehashController {
     private String responseStr;
     private NicehashIntegral nicehashIntegral;
 
-    public NicehashController(String addr, Rate rate, BalanceController balanceController) {
+    public NicehashController(String addr, RateController rateController, BalanceController balanceController) {
         this.addr = addr;
-        nicehashIntegral = new NicehashIntegral(rate);
+        nicehashIntegral = new NicehashIntegral(rateController);
 
         //Confirmed balance
         nicehashIntegral.nicehashBTC.addBalanceConfirmed(balanceController.getBalance());

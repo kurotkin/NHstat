@@ -1,15 +1,15 @@
 package com.kurotkin.model;
 
-import com.kurotkin.controller.Rate;
+import com.kurotkin.controller.RateController;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class NicehashRUB  extends NicehashCurrency implements Nisehash  {
-    private Rate rate;
+    private RateController rateController;
 
-    public NicehashRUB(Rate rate) {
-        this.rate = rate;
+    public NicehashRUB(RateController rateController) {
+        this.rateController = rateController;
         profitability = new BigDecimal("0.00");
         balance  = new BigDecimal("0.00");
         balanceConfirmed = new BigDecimal("0.00");
@@ -19,19 +19,19 @@ public class NicehashRUB  extends NicehashCurrency implements Nisehash  {
 
     @Override
     public void addProfitability(BigDecimal valBTC) {
-        BigDecimal valRUB = valBTC.multiply(rate.getPrice_rub());
+        BigDecimal valRUB = valBTC.multiply(rateController.getPrice_rub());
         profitability = profitability.add(valRUB);
     }
 
     @Override
     public void addBalance(BigDecimal valBTC) {
-        BigDecimal valRUB = valBTC.multiply(rate.getPrice_rub());
+        BigDecimal valRUB = valBTC.multiply(rateController.getPrice_rub());
         balance = balance.add(valRUB);
     }
 
     @Override
     public void addBalanceConfirmed(BigDecimal valBTC) {
-        BigDecimal valRUB = valBTC.multiply(rate.getPrice_rub());
+        BigDecimal valRUB = valBTC.multiply(rateController.getPrice_rub());
         this.balanceConfirmed = this.balanceConfirmed.add(valRUB);
     }
 
@@ -42,8 +42,8 @@ public class NicehashRUB  extends NicehashCurrency implements Nisehash  {
 
     @Override
     public void addWorkers(Worker worker) {
-        worker.profitability = worker.profitability.multiply(rate.getPrice_rub());
-        worker.balance = worker.balance.multiply(rate.getPrice_rub());
+        worker.profitability = worker.profitability.multiply(rateController.getPrice_rub());
+        worker.balance = worker.balance.multiply(rateController.getPrice_rub());
         workerList.add(worker);
     }
 }
