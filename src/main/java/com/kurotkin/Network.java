@@ -10,6 +10,7 @@ import com.kurotkin.dao.influxdb.INicehashIntegralDAO;
 import com.kurotkin.dao.influxdb.IPriceDAO;
 import com.kurotkin.dao.influxdb.ISimplemultialgoDAO;
 import com.kurotkin.dao.influxdb.IWorkerDAO;
+import com.kurotkin.dao.mysql.HPriceDAO;
 import com.kurotkin.model.*;
 import com.kurotkin.utils.SettingsLoader;
 import com.kurotkin.utils.TimeDelay;
@@ -26,6 +27,16 @@ public class Network {
         SettingsLoader ss = new SettingsLoader("settings.yml");
         System.out.println(ss.toString());
 
+        // DAOs
+        IPriceDAO iPriceDAO = new IPriceDAO(ss.getInflParam());
+        ISimplemultialgoDAO iSimplemultialgoDAO = new ISimplemultialgoDAO(ss.getInflParam());
+        INicehashIntegralDAO iNicehashIntegralDAO = new INicehashIntegralDAO(ss.getInflParam());
+        IWorkerDAO iWorkerDAO_BTC = new IWorkerDAO(ss.getInflParam(), "BTC");
+        IWorkerDAO iWorkerDAO_USD = new IWorkerDAO(ss.getInflParam(), "USD");
+        IWorkerDAO iWorkerDAO_RUB = new IWorkerDAO(ss.getInflParam(), "RUB");
+
+        HPriceDAO hPriceDAO = new HPriceDAO();
+
         while (true){
             TimeDelay td = new TimeDelay(120000L);
 
@@ -35,30 +46,25 @@ public class Network {
             AlgoProfitabilityController algoProfitabilityController = new AlgoProfitabilityController();
 
             // Price
-            IPriceDAO iPriceDAO = new IPriceDAO(ss.getInflParam());
             iPriceDAO.save(rateController);
+            hPriceDAO.save(rateController);
 
             // Prof. algo
-            ISimplemultialgoDAO iSimplemultialgoDAO = new ISimplemultialgoDAO(ss.getInflParam());
             iSimplemultialgoDAO.saveAll(algoProfitabilityController.getProfAlgoList());
 
             // Integral Params
-            INicehashIntegralDAO iNicehashIntegralDAO = new INicehashIntegralDAO(ss.getInflParam());
             iNicehashIntegralDAO.save(nicehashController.getNicehashIntegral());
 
             // Workers BTC
             List<Worker> workerListBTC = nicehashController.getNicehashBTC().getWorkerList();
-            IWorkerDAO iWorkerDAO_BTC = new IWorkerDAO(ss.getInflParam(), "BTC");
             iWorkerDAO_BTC.saveAll(workerListBTC);
 
             // Workers USD
             List<Worker> workerListUSD = nicehashController.getNicehashUSD().getWorkerList();
-            IWorkerDAO iWorkerDAO_USD = new IWorkerDAO(ss.getInflParam(), "USD");
             iWorkerDAO_USD.saveAll(workerListUSD);
 
             // Workers RUB
             List<Worker> workerListRUB = nicehashController.getNicehashRUB().getWorkerList();
-            IWorkerDAO iWorkerDAO_RUB = new IWorkerDAO(ss.getInflParam(), "RUB");
             iWorkerDAO_RUB.saveAll(workerListRUB);
 
             td.getTime();
