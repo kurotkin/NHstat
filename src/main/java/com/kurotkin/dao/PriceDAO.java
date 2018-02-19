@@ -1,6 +1,6 @@
 package com.kurotkin.dao;
 
-import com.kurotkin.controller.RateController;
+import com.kurotkin.model.mysql.Rate;
 
-public interface PriceDAO extends GenericDAO<RateController,Long>{
+public interface PriceDAO extends GenericDAO<Rate,Long>{
 }
