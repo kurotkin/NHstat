@@ -10,10 +10,10 @@ import org.influxdb.dto.Point;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class ISimplemultialgoDAO implements SimplemultialgoDAO {
+public class IProfitabilityAlgorithmsDAO implements SimplemultialgoDAO {
     private InfluxDBParam infl;
 
-    public ISimplemultialgoDAO(InfluxDBParam infl) {
+    public IProfitabilityAlgorithmsDAO(InfluxDBParam infl) {
         this.infl = infl;
     }
 

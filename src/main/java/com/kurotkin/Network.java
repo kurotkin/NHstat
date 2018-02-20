@@ -1,24 +1,19 @@
 package com.kurotkin;
 
-import com.esotericsoftware.yamlbeans.YamlException;
-import com.esotericsoftware.yamlbeans.YamlReader;
 import com.kurotkin.controller.AlgoProfitabilityController;
 import com.kurotkin.controller.BalanceController;
 import com.kurotkin.controller.NicehashController;
 import com.kurotkin.controller.RateController;
 import com.kurotkin.dao.influxdb.INicehashIntegralDAO;
 import com.kurotkin.dao.influxdb.IPriceDAO;
-import com.kurotkin.dao.influxdb.ISimplemultialgoDAO;
+import com.kurotkin.dao.influxdb.IProfitabilityAlgorithmsDAO;
 import com.kurotkin.dao.influxdb.IWorkerDAO;
 import com.kurotkin.dao.mysql.HPriceDAO;
 import com.kurotkin.model.*;
 import com.kurotkin.utils.SettingsLoader;
 import com.kurotkin.utils.TimeDelay;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.List;
-import java.util.Map;
 
 public class Network {
 
@@ -29,7 +24,7 @@ public class Network {
 
         // DAOs
         IPriceDAO iPriceDAO = new IPriceDAO(ss.getInflParam());
-        ISimplemultialgoDAO iSimplemultialgoDAO = new ISimplemultialgoDAO(ss.getInflParam());
+        IProfitabilityAlgorithmsDAO iProfitabilityAlgorithmsDAO = new IProfitabilityAlgorithmsDAO(ss.getInflParam());
         INicehashIntegralDAO iNicehashIntegralDAO = new INicehashIntegralDAO(ss.getInflParam());
         IWorkerDAO iWorkerDAO_BTC = new IWorkerDAO(ss.getInflParam(), "BTC");
         IWorkerDAO iWorkerDAO_USD = new IWorkerDAO(ss.getInflParam(), "USD");
@@ -46,11 +41,11 @@ public class Network {
             AlgoProfitabilityController algoProfitabilityController = new AlgoProfitabilityController();
 
             // Price
-            iPriceDAO.save(rateController);
-            hPriceDAO.save(rateController);
+            iPriceDAO.save(rateController.getRate());
+            hPriceDAO.save(rateController.getRate());
 
             // Prof. algo
-            iSimplemultialgoDAO.saveAll(algoProfitabilityController.getProfAlgoList());
+            iProfitabilityAlgorithmsDAO.saveAll(algoProfitabilityController.getProfAlgoList());
 
             // Integral Params
             iNicehashIntegralDAO.save(nicehashController.getNicehashIntegral());

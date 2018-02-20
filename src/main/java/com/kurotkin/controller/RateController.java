@@ -71,6 +71,10 @@ public class RateController {
         return rate.getPrice_rub();
     }
 
+    public Rate getRate() {
+        return rate;
+    }
+
     public void print() {
         System.out.println(this.toString());
     }
