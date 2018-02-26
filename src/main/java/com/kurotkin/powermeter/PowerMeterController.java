@@ -24,8 +24,9 @@ public class PowerMeterController {
         infl = new SettingsLoader("settings.yml").getInflParam();
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET, produces={MediaType.APPLICATION_XML_VALUE})
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public void add(@RequestParam(value = "power", required = true) String powerString) {
+        System.out.println(powerString);
         try {
             InfluxDB influxDB = InfluxDBFactory.connect(infl.InfluxDBUrl, infl.InfluxDBUser, infl.InfluxDBPass);
             influxDB.createDatabase(infl.InfluxDBdbName);
