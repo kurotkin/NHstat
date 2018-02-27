@@ -1,5 +1,6 @@
 package com.kurotkin.dao.influxdb;
 
+import com.kurotkin.algoprof.AlgoProf;
 import com.kurotkin.dao.SimplemultialgoDAO;
 import com.kurotkin.model.*;
 import org.influxdb.InfluxDB;
@@ -18,7 +19,7 @@ public class IProfitabilityAlgorithmsDAO implements SimplemultialgoDAO {
     }
 
     @Override
-    public void save(NicehashSimplemultialgo simplemultialgo) {
+    public void save(AlgoProf simplemultialgo) {
         try {
             InfluxDB influxDB = InfluxDBFactory.connect(infl.InfluxDBUrl, infl.InfluxDBUser, infl.InfluxDBPass);
             influxDB.createDatabase(infl.InfluxDBdbName);
@@ -36,7 +37,7 @@ public class IProfitabilityAlgorithmsDAO implements SimplemultialgoDAO {
     }
 
     @Override
-    public void saveAll(List<NicehashSimplemultialgo> list) {
+    public void saveAll(List<AlgoProf> list) {
         try {
             InfluxDB influxDB = InfluxDBFactory.connect(infl.InfluxDBUrl, infl.InfluxDBUser, infl.InfluxDBPass);
             influxDB.createDatabase(infl.InfluxDBdbName);
@@ -57,8 +58,9 @@ public class IProfitabilityAlgorithmsDAO implements SimplemultialgoDAO {
         }
     }
 
-    private Point prepareBatchPoints(NicehashSimplemultialgo sAlgo){
+    private Point prepareBatchPoints(AlgoProf sAlgo){
         String name = sAlgo.getName();
+
         Point.Builder builder = Point.measurement(name);
         builder.time(System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
