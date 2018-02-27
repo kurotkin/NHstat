@@ -17,6 +17,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
     </properties>
 
     <parent>
@@ -27,7 +28,7 @@
     </parent>
 
     <dependencies>
-        <!--Spring-->
+                            <!--Spring-->
         <!--<dependency>-->
             <!--<groupId>org.springframework.boot</groupId>-->
             <!--<artifactId>spring-boot-starter-data-jpa</artifactId>-->
@@ -54,6 +55,29 @@
             <scope>runtime</scope>
         </dependency>
 
+                                <!--DB-->
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.8-dmr</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.4.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+                                <!--Log-->
         <!-- slf4j-log4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -73,12 +97,7 @@
             <version>${hibernate.version.tools}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.8-dmr</version>
-        </dependency>
+
 
         <dependency>
             <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -94,13 +113,7 @@
             <version>1.10.3</version>
             <scope>compile</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.4.2</version>
-            <scope>compile</scope>
-        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -132,21 +145,25 @@
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.6</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpasyncclient</artifactId>
             <version>4.0.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
             <version>4.3.6</version>
         </dependency>
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>

@@ -1,6 +1,6 @@
 package com.kurotkin;
 
-import com.kurotkin.controller.AlgoProfitabilityController;
+import com.kurotkin.algoprof.AlgoProfController;
 import com.kurotkin.controller.BalanceController;
 import com.kurotkin.controller.NicehashController;
 import com.kurotkin.controller.RateController;
@@ -38,14 +38,14 @@ public class Network {
             RateController rateController = new RateController();
             BalanceController balanceController = new BalanceController(ss.getNicehashId(), ss.getNicehashKey());
             NicehashController nicehashController = new NicehashController(ss.getNicehash(), rateController, balanceController);
-            AlgoProfitabilityController algoProfitabilityController = new AlgoProfitabilityController();
+            AlgoProfController algoProfController = new AlgoProfController();
 
             // Price
             iPriceDAO.save(rateController.getRate());
             hPriceDAO.save(rateController.getRate());
 
             // Prof. algo
-            iProfitabilityAlgorithmsDAO.saveAll(algoProfitabilityController.getProfAlgoList());
+            iProfitabilityAlgorithmsDAO.saveAll(algoProfController.getProfAlgoList());
 
             // Integral Params
             iNicehashIntegralDAO.save(nicehashController.getNicehashIntegral());

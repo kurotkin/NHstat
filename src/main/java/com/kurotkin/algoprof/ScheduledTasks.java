@@ -7,16 +7,22 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class ScheduledTasks {
+    private final AlgoProfRepository algoProfRepository;
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
-
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+
+    public ScheduledTasks(AlgoProfRepository algoProfRepository) {
+        this.algoProfRepository = algoProfRepository;
+    }
 
     @Scheduled(fixedRate = 5000)
     public void reportCurrentTime() {
-        log.info("The time is now {}", dateFormat.format(new Date()));
-        System.out.println("The time is now " + dateFormat.format(new Date()));
+        AlgoProfController algoProfController = new AlgoProfController();
+        List<AlgoProf> algoProfList = algoProfController.getProfAlgoList();
+        algoProfRepository.save(algoProfList);
     }
 }
