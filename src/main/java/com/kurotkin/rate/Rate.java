@@ -10,11 +10,11 @@ public class Rate {
     @Id
     private Long id;
 
-    private BigDecimal price_usd;
-    private BigDecimal price_rub;
-    private BigDecimal percent_change_1h;
-    private BigDecimal percent_change_24h;
-    private BigDecimal percent_change_7d;
+    private BigDecimal price_usd  = new BigDecimal("0.00");;
+    private BigDecimal price_rub  = new BigDecimal("0.00");;
+    private BigDecimal percent_change_1h  = new BigDecimal("0.00");
+    private BigDecimal percent_change_24h = new BigDecimal("0.00");
+    private BigDecimal percent_change_7d = new BigDecimal("0.00");
     private Date last_updated;
 
     public Rate() {
