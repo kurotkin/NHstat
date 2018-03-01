@@ -13,6 +13,18 @@ public class HashBTC {
     private BigDecimal balance  = new BigDecimal("0.00");
     private BigDecimal speed  = new BigDecimal("0.00");
 
+    public void addProfitability(BigDecimal profitability){
+        this.profitability = this.profitability.add(profitability);
+    }
+
+    public void addBalance(BigDecimal balance){
+        this.balance = this.balance.add(balance);
+    }
+
+    public void addSpeed(BigDecimal speed){
+        this.speed = this.speed.add(speed);
+    }
+
     public HashBTC() {
     }
 

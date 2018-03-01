@@ -29,16 +29,15 @@ public class HashBTC_DAO {
                     .retentionPolicy("autogen")
                     .consistency(InfluxDB.ConsistencyLevel.ALL)
                     .build();
-            Long time = System.currentTimeMillis();
             batchPoints.point(Point
                     .measurement("Integral")
-                    .time(time, TimeUnit.MILLISECONDS)
+                    .time(hashBTC.getId(), TimeUnit.MILLISECONDS)
                     .addField("profitability_BTC", hashBTC.getProfitability().doubleValue())
                     .addField("balance_BTC", hashBTC.getBalance().doubleValue())
                     .addField("speed", hashBTC.getSpeed().doubleValue())
                     .build());
             influxDB.write(batchPoints);
-            log.info(rate.toString());
+            log.info(hashBTC.toString());
         }
         catch (Exception e){
             log.error("Ошибка записи стоимости валюты");
