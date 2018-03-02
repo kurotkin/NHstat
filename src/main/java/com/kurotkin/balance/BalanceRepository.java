@@ -1,4 +1,6 @@
 package com.kurotkin.balance;
 
-public interface BalanceRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface BalanceRepository extends CrudRepository<Balance, Long> {
 }
