@@ -1,12 +1,12 @@
 package com.kurotkin.hashbtc;
 
 import com.google.gson.Gson;
-import com.kurotkin.algoprof.ScheduledTasks;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.Current;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.DataString;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProvider;
 import com.kurotkin.api.com.nicehash.api.stats.provider.ex.ResponseProviderWithError;
-import com.kurotkin.model.Worker;
+import com.kurotkin.rate.Rate;
+import com.kurotkin.rate.RateRepository;
 import com.kurotkin.utils.SettingsLoader;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -18,11 +18,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class HashBTC_Controller {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(HashBTC_Controller.class);
     private HashBTC hashBTC = new HashBTC();
     private String responseStr;
+    private RateRepository rateRepository;
 
-    public HashBTC_Controller() {
+    public HashBTC_Controller(RateRepository rateRepository) {
+        this.rateRepository = rateRepository;
         String addr = new SettingsLoader("settings.yml").getNicehash();
         try {
             responseStr = Unirest.get("https://api.nicehash.com/api")
@@ -58,7 +60,7 @@ public class HashBTC_Controller {
 
             // Parse balance
             BigDecimal currentBalance = new BigDecimal(aS[1]);
-            hashBTC.addProfitability(currentBalance);   // TODO добавить порверку на null
+            hashBTC.addBalance(currentBalance);   // TODO добавить порверку на null
 
             // Parse speed
             BigDecimal currentSpeed = calcSpeed(aS[0], c.suffix);
@@ -105,11 +107,11 @@ public class HashBTC_Controller {
             ResponseProviderWithError result = new Gson().fromJson(responseStr, ResponseProviderWithError.class);
             String aS[] = result.result.error.split(" ");
             int timeDelay = Integer.parseInt(aS[13]);
-            System.out.println("Delay " + timeDelay + " sec");
+            log.error("Delay " + timeDelay + " sec");
             Thread.sleep(timeDelay * 1000);
             query();
         } catch (Exception Er) {
-            System.err.println("Ошибка Nicehash: " + Er);
+            log.error("Ошибка Nicehash: " + Er + " responseStr = " + responseStr);
         }
     }
 }

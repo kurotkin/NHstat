@@ -1,8 +1,6 @@
 package com.kurotkin.hashbtc;
 
-import com.kurotkin.algoprof.ScheduledTasks;
 import com.kurotkin.model.InfluxDBParam;
-import com.kurotkin.rate.Rate;
 import com.kurotkin.utils.SettingsLoader;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
@@ -14,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 public class HashBTC_DAO {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(HashBTC_DAO.class);
     private InfluxDBParam infl;
 
     public HashBTC_DAO() {
@@ -37,7 +35,7 @@ public class HashBTC_DAO {
                     .addField("speed", hashBTC.getSpeed().doubleValue())
                     .build());
             influxDB.write(batchPoints);
-            log.info(hashBTC.toString());
+            log.info("Записано = " + hashBTC.toString());
         }
         catch (Exception e){
             log.error("Ошибка записи стоимости валюты");

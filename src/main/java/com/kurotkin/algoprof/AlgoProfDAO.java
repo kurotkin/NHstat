@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class AlgoProfDAO {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(AlgoProfDAO.class);
     private InfluxDBParam infl;
 
     public AlgoProfDAO() {

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 
 public class BalanceController {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(BalanceController.class);
     private Balance balance = new Balance();
     private String responseStr;
 

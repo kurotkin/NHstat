@@ -1,6 +1,5 @@
 package com.kurotkin.rate;
 
-import com.kurotkin.algoprof.ScheduledTasks;
 import com.kurotkin.model.InfluxDBParam;
 import com.kurotkin.utils.SettingsLoader;
 import org.influxdb.InfluxDB;
@@ -12,12 +11,13 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 public class RateDAO {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(RateDAO.class);
     private InfluxDBParam infl;
 
     public RateDAO() {
         this.infl = new SettingsLoader("settings.yml").getInflParam();
     }
+
 
     public void save(Rate rate) {
         try {
@@ -40,7 +40,7 @@ public class RateDAO {
                             .build());
 
             influxDB.write(batchPoints);
-            log.info(rate.toString());
+            log.info("Записано = " + rate.toString());
         }
         catch (Exception e){
             log.error("Ошибка записи стоимости валюты");

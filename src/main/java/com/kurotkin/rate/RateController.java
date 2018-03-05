@@ -1,7 +1,6 @@
 package com.kurotkin.rate;
 
 import com.google.gson.Gson;
-import com.kurotkin.algoprof.ScheduledTasks;
 import com.kurotkin.api.com.coinmarketcap.api.BitcoinRub;
 import com.kurotkin.api.com.coinmarketcap.api.ResponseBitcoinRub;
 import com.mashape.unirest.http.HttpResponse;
@@ -15,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class RateController {
-    private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
+    private static final Logger log = LoggerFactory.getLogger(RateController.class);
     private Rate rate = new Rate();
 
     public RateController() {
