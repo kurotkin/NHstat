@@ -48,7 +48,9 @@ public class ScheduledTasks {
         RateController rateController = new RateController();
         Rate rate = rateController.getRate();
         rateDAO.save(rate);
+        rate.setId(1L);
         rateRepository.save(rate);
+        System.out.println("Find " + rateRepository.findOne(1L).toString());
     }
 
     @Scheduled(fixedRate = 930_000)
