@@ -4,14 +4,15 @@ import com.google.gson.Gson;
 import com.kurotkin.utils.SettingsLoader;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
+@Slf4j
 public class BalanceController {
-    private static final Logger log = LoggerFactory.getLogger(BalanceController.class);
-    private Balance balance = new Balance();
+    private Balance balance;
     private String responseStr;
 
     public BalanceController() {
@@ -28,6 +29,7 @@ public class BalanceController {
             log.error("Полный баланс не скачался");
         }
 
+        balance = new Balance();
         balance.setId(System.currentTimeMillis());
         try {
             com.kurotkin.api.com.nicehash.api.balance.Balance balanceResponse = new Gson()

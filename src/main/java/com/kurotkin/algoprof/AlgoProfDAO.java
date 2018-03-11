@@ -2,6 +2,7 @@ package com.kurotkin.algoprof;
 
 import com.kurotkin.model.InfluxDBParam;
 import com.kurotkin.utils.SettingsLoader;
+import lombok.extern.slf4j.Slf4j;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.BatchPoints;
@@ -12,8 +13,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class AlgoProfDAO {
-    private static final Logger log = LoggerFactory.getLogger(AlgoProfDAO.class);
     private InfluxDBParam infl;
 
     public AlgoProfDAO() {

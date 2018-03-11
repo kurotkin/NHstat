@@ -1,9 +1,16 @@
 package com.kurotkin.hashbtc;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class HashBTC {
     @Id
@@ -35,50 +42,4 @@ public class HashBTC {
         this.speed = this.speed.add(speed);
     }
 
-    public HashBTC() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public BigDecimal getProfitability() {
-        return profitability;
-    }
-
-    public void setProfitability(BigDecimal profitability) {
-        this.profitability = profitability;
-    }
-
-    public BigDecimal getBalance() {
-        return balance;
-    }
-
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
-    }
-
-    public BigDecimal getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(BigDecimal speed) {
-        this.speed = speed;
-    }
-
-    @Override
-    public String toString() {
-        return "HashBTC{" +
-                "id=" + id +
-                ", profitability=" + profitability +
-                ", profitabilityRUB=" + profitabilityRUB +
-                ", profitabilityUSD=" + profitabilityUSD +
-                ", balance=" + balance +
-                ", speed=" + speed +
-                '}';
-    }
 }

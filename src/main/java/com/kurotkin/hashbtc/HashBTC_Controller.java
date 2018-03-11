@@ -10,6 +10,7 @@ import com.kurotkin.rate.RateRepository;
 import com.kurotkin.utils.SettingsLoader;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +18,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 public class HashBTC_Controller {
-    private static final Logger log = LoggerFactory.getLogger(HashBTC_Controller.class);
     private HashBTC hashBTC = new HashBTC();
     private String responseStr;
     private RateRepository rateRepository;

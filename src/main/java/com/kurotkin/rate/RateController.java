@@ -7,14 +7,15 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Slf4j
 public class RateController {
-    private static final Logger log = LoggerFactory.getLogger(RateController.class);
     private Rate rate = new Rate();
 
     public RateController() {

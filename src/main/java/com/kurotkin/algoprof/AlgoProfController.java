@@ -4,14 +4,15 @@ import com.google.gson.Gson;
 import com.kurotkin.api.com.nicehash.api.simplemultialgo.SimplemultialgoObject;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
 
+@Slf4j
 public class AlgoProfController {
-    private static final Logger log = LoggerFactory.getLogger(AlgoProfController.class);
     private SimplemultialgoObject simplemultialgo;
 
     public AlgoProfController() {
@@ -30,7 +31,7 @@ public class AlgoProfController {
     public List<AlgoProf> getProfAlgoList(){
         List<AlgoProf> list = new ArrayList<>();
         simplemultialgo.result.simplemultialgo.forEach( a -> {
-            list.add(new AlgoProf(a.algo, new BigDecimal(a.paying), a.port, a.name));
+            list.add(new AlgoProf(a.algo, a.name, new BigDecimal(a.paying), a.port));
         });
         return list;
     }
