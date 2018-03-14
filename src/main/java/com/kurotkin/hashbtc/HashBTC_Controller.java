@@ -52,6 +52,7 @@ public class HashBTC_Controller {
 
     private void query(){
         ResponseProvider rp = new Gson().fromJson(responseStr, ResponseProvider.class);
+        Rate rate = rateRepository.findOne(1L);
         List<Current> currents = rp.result.current;
         currents.forEach(c -> {
             // Parse data
@@ -61,11 +62,18 @@ public class HashBTC_Controller {
 
             // Parse balance
             BigDecimal currentBalance = new BigDecimal(aS[1]);
-            hashBTC.addBalance(currentBalance);   // TODO добавить порверку на null
+
+
+            if (!currentBalance.equals(null)){
+                hashBTC.addBalance(currentBalance);
+                if (rate != null){
+                    hashBTC.addBalanceRUB(currentBalance.multiply(rate.getPrice_rub()));
+                    hashBTC.addBalanceUSD(currentBalance.multiply(rate.getPrice_usd()));
+                }
+            }
 
             // Parse speed
             BigDecimal currentSpeed = calcSpeed(aS[0], c.suffix);
-            hashBTC.addSpeed(currentSpeed);
 
             // Parse profitability
             String currentProfitabilityString = String.format(Locale.US,"%.8f", c.profitability);

@@ -20,7 +20,9 @@ public class HashBTC {
     private BigDecimal profitabilityRUB = new BigDecimal("0.00");
     private BigDecimal profitabilityUSD = new BigDecimal("0.00");
     private BigDecimal balance  = new BigDecimal("0.00");
-    private BigDecimal speed  = new BigDecimal("0.00");
+    private BigDecimal balanceRUB  = new BigDecimal("0.00");
+    private BigDecimal balanceUSD  = new BigDecimal("0.00");
+
 
     public void addProfitability(BigDecimal profitability){
         this.profitability = this.profitability.add(profitability);
@@ -38,8 +40,12 @@ public class HashBTC {
         this.balance = this.balance.add(balance);
     }
 
-    public void addSpeed(BigDecimal speed){
-        this.speed = this.speed.add(speed);
+    public void addBalanceRUB(BigDecimal balanceRUB){
+        this.balanceRUB = this.balanceRUB.add(balanceRUB);
+    }
+
+    public void addBalanceUSD(BigDecimal balanceUSD){
+        this.balanceUSD = this.balanceUSD.add(balanceUSD);
     }
 
 }
