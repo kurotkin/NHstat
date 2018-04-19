@@ -5,8 +5,6 @@ import com.kurotkin.api.com.nicehash.api.simplemultialgo.SimplemultialgoObject;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -28,10 +26,10 @@ public class AlgoProfController {
         }
     }
 
-    public List<AlgoProf> getProfAlgoList(){
-        List<AlgoProf> list = new ArrayList<>();
+    public List<AlgoProfModel> getProfAlgoList(){
+        List<AlgoProfModel> list = new ArrayList<>();
         simplemultialgo.result.simplemultialgo.forEach( a -> {
-            list.add(new AlgoProf(a.algo, a.name, new BigDecimal(a.paying), a.port));
+            list.add(new AlgoProfModel(a.algo, a.name, new BigDecimal(a.paying), a.port));
         });
         return list;
     }

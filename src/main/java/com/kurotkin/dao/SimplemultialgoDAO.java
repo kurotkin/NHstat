@@ -1,7 +1,6 @@
 package com.kurotkin.dao;
 
-import com.kurotkin.algoprof.AlgoProf;
-import com.kurotkin.model.NicehashSimplemultialgo;
+import com.kurotkin.algoprof.AlgoProfModel;
 
-public interface SimplemultialgoDAO extends GenericDAO<AlgoProf, Long> {
+public interface SimplemultialgoDAO extends GenericDAO<AlgoProfModel, Long> {
 }

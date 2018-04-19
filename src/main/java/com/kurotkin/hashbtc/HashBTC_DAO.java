@@ -19,7 +19,7 @@ public class HashBTC_DAO {
         this.infl = new SettingsLoader("settings.yml").getInflParam();
     }
 
-    public void save(HashBTC hashBTC) {
+    public void save(HashBTCModel hashBTCModel) {
         try {
             InfluxDB influxDB = InfluxDBFactory.connect(infl.InfluxDBUrl, infl.InfluxDBUser, infl.InfluxDBPass);
             influxDB.createDatabase(infl.InfluxDBdbName);
@@ -29,13 +29,13 @@ public class HashBTC_DAO {
                     .build();
             batchPoints.point(Point
                     .measurement("Integral")
-                    .time(hashBTC.getId(), TimeUnit.MILLISECONDS)
-                    .addField("profitability_BTC", hashBTC.getProfitability().doubleValue())
-                    .addField("balance_BTC", hashBTC.getBalance().doubleValue())
-                    .addField("speed", hashBTC.getSpeed().doubleValue())
+                    .time(hashBTCModel.getId(), TimeUnit.MILLISECONDS)
+                    .addField("profitability_BTC", hashBTCModel.getProfitability().doubleValue())
+                    .addField("balance_BTC", hashBTCModel.getBalance().doubleValue())
+                    .addField("speed", hashBTCModel.getSpeed().doubleValue())
                     .build());
             influxDB.write(batchPoints);
-            log.info("Записано = " + hashBTC.toString());
+            log.info("Записано = " + hashBTCModel.toString());
         }
         catch (Exception e){
             log.error("Ошибка записи стоимости валюты");

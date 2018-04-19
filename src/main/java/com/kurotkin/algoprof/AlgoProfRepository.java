@@ -4,5 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AlgoProfRepository extends CrudRepository<AlgoProf, Integer> {
+public interface AlgoProfRepository extends CrudRepository<AlgoProfModel, Integer> {
 }

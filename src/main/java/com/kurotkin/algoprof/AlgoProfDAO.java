@@ -7,8 +7,6 @@ import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.BatchPoints;
 import org.influxdb.dto.Point;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +19,7 @@ public class AlgoProfDAO {
         this.infl = new SettingsLoader("settings.yml").getInflParam();
     }
 
-    public void save(List<AlgoProf> list) {
+    public void save(List<AlgoProfModel> list) {
         try {
             InfluxDB influxDB = InfluxDBFactory.connect(infl.InfluxDBUrl, infl.InfluxDBUser, infl.InfluxDBPass);
             influxDB.createDatabase(infl.InfluxDBdbName);

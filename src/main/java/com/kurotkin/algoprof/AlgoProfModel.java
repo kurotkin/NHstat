@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @Entity
-public class AlgoProf {
+public class AlgoProfModel {
 
     @Id
     private int algo;

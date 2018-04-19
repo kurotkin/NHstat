@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class HashBTC {
+public class HashBTCModel {
     @Id
     private Long id;
 

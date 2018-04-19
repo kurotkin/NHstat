@@ -15,6 +15,7 @@ import com.kurotkin.utils.TimeDelay;
 
 import java.util.List;
 
+@Deprecated
 public class Network {
 
 

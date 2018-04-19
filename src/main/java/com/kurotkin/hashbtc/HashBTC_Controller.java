@@ -11,8 +11,6 @@ import com.kurotkin.utils.SettingsLoader;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.Locale;
 
 @Slf4j
 public class HashBTC_Controller {
-    private HashBTC hashBTC = new HashBTC();
+    private HashBTCModel hashBTCModel = new HashBTCModel();
     private String responseStr;
     private RateRepository rateRepository;
 
@@ -37,7 +35,7 @@ public class HashBTC_Controller {
         } catch (UnirestException e) {
             log.error("Интегральные параметры не скачались");
         }
-        hashBTC.setId(System.currentTimeMillis());
+        hashBTCModel.setId(System.currentTimeMillis());
         try {
             query();
         } catch (Exception E) {
@@ -46,8 +44,8 @@ public class HashBTC_Controller {
         }
     }
 
-    public HashBTC getHashBTC() {
-        return hashBTC;
+    public HashBTCModel getHashBTC() {
+        return hashBTCModel;
     }
 
     private void query(){
@@ -65,10 +63,10 @@ public class HashBTC_Controller {
 
 
             if (!currentBalance.equals(null)){
-                hashBTC.addBalance(currentBalance);
+                hashBTCModel.addBalance(currentBalance);
                 if (rate != null){
-                    hashBTC.addBalanceRUB(currentBalance.multiply(rate.getPrice_rub()));
-                    hashBTC.addBalanceUSD(currentBalance.multiply(rate.getPrice_usd()));
+                    hashBTCModel.addBalanceRUB(currentBalance.multiply(rate.getPrice_rub()));
+                    hashBTCModel.addBalanceUSD(currentBalance.multiply(rate.getPrice_usd()));
                 }
             }
 
@@ -83,7 +81,7 @@ public class HashBTC_Controller {
             }else{
                 currentProfitability = new BigDecimal(currentProfitabilityString);
             }
-            hashBTC.addProfitability(currentProfitability);
+            hashBTCModel.addProfitability(currentProfitability);
         });
     }
 

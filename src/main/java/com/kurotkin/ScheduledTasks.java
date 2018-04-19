@@ -1,25 +1,21 @@
 package com.kurotkin;
 
-import com.kurotkin.algoprof.AlgoProf;
+import com.kurotkin.algoprof.AlgoProfModel;
 import com.kurotkin.algoprof.AlgoProfController;
 import com.kurotkin.algoprof.AlgoProfDAO;
 import com.kurotkin.balance.Balance;
 import com.kurotkin.balance.BalanceController;
 import com.kurotkin.balance.BalanceDAO;
-import com.kurotkin.hashbtc.HashBTC;
+import com.kurotkin.hashbtc.HashBTCModel;
 import com.kurotkin.hashbtc.HashBTC_Controller;
 import com.kurotkin.hashbtc.HashBTC_DAO;
 import com.kurotkin.rate.Rate;
 import com.kurotkin.rate.RateController;
 import com.kurotkin.rate.RateDAO;
 import com.kurotkin.rate.RateRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -39,8 +35,8 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 100_000)
     public void algoProfEx() {
         AlgoProfController algoProfController = new AlgoProfController();
-        List<AlgoProf> algoProfList = algoProfController.getProfAlgoList();
-        algoProfDAO.save(algoProfList);
+        List<AlgoProfModel> algoProfModelList = algoProfController.getProfAlgoList();
+        algoProfDAO.save(algoProfModelList);
     }
 
     @Scheduled(fixedRate = 999_000)
@@ -63,7 +59,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 240_000)
     public void hashBTCEx() {
         HashBTC_Controller hashBTC_controller = new HashBTC_Controller(rateRepository);
-        HashBTC hashBTC = hashBTC_controller.getHashBTC();
-        hashBTC_dao.save(hashBTC);
+        HashBTCModel hashBTCModel = hashBTC_controller.getHashBTC();
+        hashBTC_dao.save(hashBTCModel);
     }
 }
